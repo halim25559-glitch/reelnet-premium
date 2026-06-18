@@ -335,7 +335,7 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
     .genre-btn.active { border: 1px solid var(--accent); }
     .main-content { padding: 16px; }
     .modal-body { flex-direction: column; overflow-y: auto; }
-    .modal-poster { flex: none; width: 100%; max-width: 250px; margin: 0 auto; aspect-ratio: 2/3; border-radius: var(--r-md); overflow: hidden; margin-top: 20px; box-shadow: var(--shadow-md); }
+    .modal-poster { flex: none; position: relative; width: 100%; max-width: 250px; margin: 0 auto; aspect-ratio: 2/3; border-radius: var(--r-md); overflow: hidden; margin-top: 20px; box-shadow: var(--shadow-md); }
     .modal-poster img { position: static; object-fit: cover; }
     .modal-info { padding: 20px 16px; max-height: none; text-align: center; }
     .modal-info h2 { font-size: 1.5rem; }
