@@ -74,6 +74,12 @@ export default function ReelNetApp() {
     const [swipeAction, setSwipeAction] = useState(null);
     const pointerStartRef = useRef({ x: 0, y: 0 });
     
+    // AI Assistant
+    const [isAiModalActive, setIsAiModalActive] = useState(false);
+    const [aiStep, setAiStep] = useState(0);
+    const [aiAnswers, setAiAnswers] = useState({ mood: null, era: null });
+    const [aiRecommendation, setAiRecommendation] = useState(null);
+
     const searchRef = useRef(null);
     const observerTarget = useRef(null);
     const toastTimer = useRef(null);
@@ -95,6 +101,26 @@ export default function ReelNetApp() {
     const handleCloseModal = () => {
         setActiveModal(null);
         window.history.pushState(null, null, window.location.pathname);
+    };
+
+    // AI Handlers
+    const handleAiStart = () => {
+        setAiStep(1);
+        setAiAnswers({ mood: null, era: null });
+        setIsAiModalActive(true);
+    };
+
+    const handleAiAnswer = (key, val) => {
+        setAiAnswers(prev => ({...prev, [key]: val}));
+        if (aiStep === 1) setAiStep(2);
+        else if (aiStep === 2) {
+            setAiStep(3); // Loading
+            setTimeout(() => {
+                const candidates = movies.filter(m => parseFloat(m.rating) > 7.0 && m.poster);
+                setAiRecommendation(candidates[Math.floor(Math.random() * candidates.length)] || movies[0]);
+                setAiStep(4); // Result
+            }, 2500);
+        }
     };
 
     const activateSwipeMode = () => {
@@ -487,7 +513,14 @@ export default function ReelNetApp() {
                 <main className="main-content">
                     {heroMovie && (
                         <section className="hero-banner">
-                            <div className="hero-bg" style={{backgroundImage: `url(${heroMovie.poster})`}}></div>
+                            <div className="hero-bg" style={{backgroundImage: `url(${heroMovie.poster})`}}>
+                                <iframe 
+                                    className="hero-video"
+                                    src="https://www.youtube.com/embed/oqxA158iNZA?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=oqxA158iNZA&playsinline=1"
+                                    frameBorder="0"
+                                    allow="autoplay; encrypted-media"
+                                ></iframe>
+                            </div>
                             <div className="hero-overlay">
                                 <span className="hero-badge"><i className="fa-solid fa-fire"></i> Featured Pick</span>
                                 <h1>{heroMovie.title}</h1>
@@ -589,8 +622,18 @@ export default function ReelNetApp() {
                         <div className="modal-body">
                             <div className="modal-top-row">
                                 <div className="modal-poster">
-                                    <img src={currentMovie.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Movie Poster"/>
-                                    <div className="original-badge">N <span>ORIGINAL</span></div>
+                                    <div className="modal-poster-img-wrapper" style={{position: 'relative', width: '100%', height: '100%', zIndex: 2}}>
+                                        <img src={currentMovie.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Movie Poster" style={{position:'relative', zIndex:5}} className="fade-out-poster"/>
+                                    </div>
+                                    <div className="modal-video-wrapper">
+                                        <iframe 
+                                            className="modal-video"
+                                            src="https://www.youtube.com/embed/oqxA158iNZA?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=oqxA158iNZA&playsinline=1"
+                                            frameBorder="0"
+                                            allow="autoplay; encrypted-media"
+                                        ></iframe>
+                                    </div>
+                                    <div className="original-badge" style={{zIndex: 10}}>N <span>ORIGINAL</span></div>
                                 </div>
                                 <div className="modal-info">
                                     <h2>{currentMovie.title}</h2>
@@ -795,6 +838,73 @@ export default function ReelNetApp() {
                 )}
             </div>
 
+            {/* AI ASSISTANT FAB */}
+            <button className="ai-fab ripple-btn" onClick={(e) => {createRipple(e); handleAiStart();}}>
+                <i className="fa-solid fa-robot"></i>
+            </button>
+
+            {/* AI ASSISTANT MODAL */}
+            {isAiModalActive && (
+                <div className="modal-overlay active" style={{zIndex: 3000}}>
+                    <div className="modal-content ai-modal-content">
+                        <button className="close-btn ripple-btn" onClick={() => setIsAiModalActive(false)}><i className="fa-solid fa-xmark"></i></button>
+                        <div className="ai-modal-body">
+                            <div className="ai-header">
+                                <i className="fa-solid fa-robot ai-icon"></i>
+                                <h2>ReelNet AI Assistant</h2>
+                                <p>Let me find the perfect movie for you.</p>
+                            </div>
+                            
+                            {aiStep === 1 && (
+                                <div className="ai-question">
+                                    <h3>What's your mood today?</h3>
+                                    <div className="ai-options">
+                                        <button onClick={()=>handleAiAnswer('mood', 'happy')}>😄 Light & Fun</button>
+                                        <button onClick={()=>handleAiAnswer('mood', 'thrill')}>😱 Thrilling & Tense</button>
+                                        <button onClick={()=>handleAiAnswer('mood', 'deep')}>🤔 Deep & Thoughtful</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {aiStep === 2 && (
+                                <div className="ai-question">
+                                    <h3>Do you prefer modern or classic?</h3>
+                                    <div className="ai-options">
+                                        <button onClick={()=>handleAiAnswer('era', 'modern')}>🚀 Modern (2010s+)</button>
+                                        <button onClick={()=>handleAiAnswer('era', 'classic')}>📼 Classic (Pre-2010)</button>
+                                        <button onClick={()=>handleAiAnswer('era', 'any')}>🎲 Surprise Me</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {aiStep === 3 && (
+                                <div className="ai-loading">
+                                    <div className="ai-spinner"></div>
+                                    <h3>Analyzing millions of data points...</h3>
+                                    <p>Finding your perfect match based on your vibe.</p>
+                                </div>
+                            )}
+
+                            {aiStep === 4 && aiRecommendation && (
+                                <div className="ai-result">
+                                    <h3>🎯 Perfect Match Found!</h3>
+                                    <div className="movie-card ai-recommendation-card" onClick={() => { setIsAiModalActive(false); handleOpenMovie(aiRecommendation); }}>
+                                        <div className="card-image-wrapper"><img src={aiRecommendation.poster} alt="Poster" /></div>
+                                        <div className="card-info">
+                                            <span className="card-title">{aiRecommendation.title}</span>
+                                            <div className="card-meta">
+                                                <span className="card-year">{aiRecommendation.year}</span>
+                                                <span className="card-rating"><i className="fa-solid fa-star"></i> {aiRecommendation.rating}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button className="primary-btn ripple-btn" style={{marginTop: '20px', width: '100%'}} onClick={(e) => { createRipple(e); setIsAiModalActive(false); handleOpenMovie(aiRecommendation); }}>View Details</button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }
