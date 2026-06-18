@@ -14,6 +14,9 @@ export const metadata = {
     images: [{ url: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png' }],
     type: 'website',
   },
+  verification: {
+    google: '2QYuMKu6_8y01hoQ8454mwXrbDdRo-64a6PYTK96zZM',
+  },
 };
 
 export default function RootLayout({ children }) {
