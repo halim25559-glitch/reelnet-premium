@@ -512,7 +512,21 @@ export default function ReelNetApp() {
                             </select>
                         </div>
                         <h2 className="desktop-only">{currentCategory === "All" ? "All Movies & Shows" : currentCategory}</h2>
-                        <span className="result-count">{filteredMovies.length} titles</span>
+                        <div style={{marginRight: 'auto', marginLeft: '16px', display: 'flex', alignItems: 'center', gap: '12px'}}>
+                            <span className="result-count" style={{margin: 0}}>{filteredMovies.length} titles</span>
+                            {currentCategory === "📌 My Watchlist" && watchlist.length > 0 && (
+                                <button className="secondary-btn ripple-btn" style={{padding: '6px 12px', fontSize: '0.85rem', color: '#ff3d47', borderColor: 'rgba(255,61,71,0.3)', background: 'rgba(255,61,71,0.05)'}} onClick={(e) => {
+                                    createRipple(e); 
+                                    if(confirm('Are you sure you want to clear your watchlist?')) {
+                                        setWatchlist([]);
+                                        localStorage.removeItem('reelnet_watchlist');
+                                        showToast('Watchlist cleared', 'fa-trash');
+                                    }
+                                }}>
+                                    <i className="fa-solid fa-trash-can"></i> Clear
+                                </button>
+                            )}
+                        </div>
                         <div className="sort-container">
                             <select className="sort-select" value={sortMode} onChange={e=>setSortMode(e.target.value)}>
                                 <option value="votes">🔥 Most Voted</option>
