@@ -235,6 +235,11 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
 .genre-tag { font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.1); padding: 3px 10px; border-radius: var(--r-full); color: var(--text-secondary); }
 .modal-synopsis { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px; }
 
+.trailer-section { margin-bottom: 16px; }
+.trailer-toggle { background: rgba(255, 255, 255, 0.05); color: var(--text-primary); border: 1px solid var(--border); padding: 8px 16px; font-family: var(--font); font-size: 0.85rem; font-weight: 600; border-radius: var(--r-full); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: var(--t-base); backdrop-filter: blur(4px); }
+.trailer-toggle i { color: #ff0000; font-size: 1.1rem; }
+.trailer-toggle:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
 /* Buttons & Share */
 .modal-actions { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 .play-btn { background: linear-gradient(135deg, var(--accent), #ff3d47); color: #fff; border: none; padding: 12px 22px; font-family: var(--font); font-size: 0.95rem; font-weight: 700; border-radius: var(--r-sm); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: var(--t-base); box-shadow: 0 4px 16px var(--accent-glow); }
