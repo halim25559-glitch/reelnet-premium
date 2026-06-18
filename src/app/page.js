@@ -334,12 +334,12 @@ export default function ReelNetApp() {
 
     const getPlatformDetails = (platformStr) => {
         const platforms = {
-            "netflix": { name: "Netflix", icon: "N", colorClass: "badge-netflix", searchUrl: "https://www.netflix.com/search?q=" },
-            "hbo": { name: "HBO Max", icon: "HBO", colorClass: "badge-hbo", searchUrl: "https://play.max.com/search?q=" },
-            "disney": { name: "Disney+", icon: "D+", colorClass: "badge-disney", searchUrl: "https://www.disneyplus.com/search?q=" },
-            "prime": { name: "Prime Video", icon: "prime", colorClass: "badge-prime", searchUrl: "https://www.amazon.com/s?k=" },
-            "apple": { name: "Apple TV+", icon: "tv+", colorClass: "badge-apple", searchUrl: "https://tv.apple.com/search?q=" },
-            "other": { name: "Stream", icon: "▶", colorClass: "badge-other", searchUrl: "https://www.google.com/search?q=" }
+            "netflix": { name: "Netflix", icon: "N", colorClass: "badge-netflix", searchUrl: "https://www.netflix.com/search?q=", themeColor: "#E50914", themeColorHover: "#b80710", themeColorGlow: "rgba(229,9,20,0.4)" },
+            "hbo": { name: "HBO Max", icon: "HBO", colorClass: "badge-hbo", searchUrl: "https://play.max.com/search?q=", themeColor: "#9B51E0", themeColorHover: "#7b3bc2", themeColorGlow: "rgba(155,81,224,0.4)" },
+            "disney": { name: "Disney+", icon: "D+", colorClass: "badge-disney", searchUrl: "https://www.disneyplus.com/search?q=", themeColor: "#1f80e0", themeColorHover: "#1563b0", themeColorGlow: "rgba(31,128,224,0.4)" },
+            "prime": { name: "Prime Video", icon: "prime", colorClass: "badge-prime", searchUrl: "https://www.amazon.com/s?k=", themeColor: "#00A8E1", themeColorHover: "#0086b3", themeColorGlow: "rgba(0,168,225,0.4)" },
+            "apple": { name: "Apple TV+", icon: "tv+", colorClass: "badge-apple", searchUrl: "https://tv.apple.com/search?q=", themeColor: "#ffffff", themeColorHover: "#cccccc", themeColorGlow: "rgba(255,255,255,0.4)" },
+            "other": { name: "Stream", icon: "▶", colorClass: "badge-other", searchUrl: "https://www.google.com/search?q=", themeColor: "#ff9900", themeColorHover: "#cc7a00", themeColorGlow: "rgba(255,153,0,0.4)" }
         };
         return platforms[platformStr || "netflix"] || platforms["netflix"];
     };
@@ -566,7 +566,7 @@ export default function ReelNetApp() {
                     {heroMovie && (() => {
                         const heroPlatform = getPlatformDetails(heroMovie.platform);
                         return (
-                            <section className="hero-banner">
+                            <section className="hero-banner" style={{'--accent': heroPlatform.themeColor, '--accent-hover': heroPlatform.themeColorHover, '--accent-glow': heroPlatform.themeColorGlow}}>
                                 <div className="hero-bg" style={{backgroundImage: `url(${heroMovie.poster})`}}></div>
                                 <div className="hero-overlay">
                                     <span className={`hero-badge ${heroPlatform.colorClass}`}><i className="fa-solid fa-fire"></i> Featured {heroPlatform.name} Pick</span>
@@ -641,7 +641,7 @@ export default function ReelNetApp() {
                                 return (
                                     <div key={m.id} className="movie-card" tabIndex="0" onClick={()=>handleOpenMovie(m)} onMouseMove={handleCardMouseMove} onMouseLeave={handleCardMouseLeave}>
                                         {rankBadge}
-                                        <div className="n-badge">N</div>
+                                        <div className="n-badge" style={{backgroundColor: getPlatformDetails(m.platform).themeColor, color: m.platform === 'apple' ? '#000' : '#fff'}}>{getPlatformDetails(m.platform).icon}</div>
                                         <img src={m.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt={`Poster for ${m.title}`}/>
                                         <div className="movie-overlay">
                                             <h4 className="card-title">{m.title}</h4>
@@ -663,7 +663,7 @@ export default function ReelNetApp() {
             </div>
 
             {/* MOVIE MODAL */}
-            <div className={`modal-overlay ${activeModal==='movie'?'active':''}`} onClick={(e)=>{if(e.target===e.currentTarget) handleCloseModal()}}>
+            <div className={`modal-overlay ${activeModal==='movie'?'active':''}`} onClick={(e)=>{if(e.target===e.currentTarget) handleCloseModal()}} style={currentMovie ? {'--accent': getPlatformDetails(currentMovie.platform).themeColor, '--accent-hover': getPlatformDetails(currentMovie.platform).themeColorHover, '--accent-glow': getPlatformDetails(currentMovie.platform).themeColorGlow} : {}}>
                 <div className="modal-content">
                     <button className="close-btn ripple-btn" onClick={handleCloseModal}><i className="fa-solid fa-xmark"></i></button>
                     {currentMovie && (
