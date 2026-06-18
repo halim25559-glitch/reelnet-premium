@@ -65,6 +65,15 @@ export default function ReelNetApp() {
     const [heroMovie, setHeroMovie] = useState(null);
     const [comments, setComments] = useState([]);
     
+    // Swipe Mode
+    const [isSwipeMode, setIsSwipeMode] = useState(false);
+    const [swipeQueue, setSwipeQueue] = useState([]);
+    const [currentSwipeIndex, setCurrentSwipeIndex] = useState(0);
+    const [swipeOffset, setSwipeOffset] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [swipeAction, setSwipeAction] = useState(null);
+    const pointerStartRef = useRef({ x: 0, y: 0 });
+    
     const searchRef = useRef(null);
     const observerTarget = useRef(null);
     const toastTimer = useRef(null);
@@ -86,6 +95,62 @@ export default function ReelNetApp() {
     const handleCloseModal = () => {
         setActiveModal(null);
         window.history.pushState(null, null, window.location.pathname);
+    };
+
+    const activateSwipeMode = () => {
+        const shuffled = [...movies].sort(() => 0.5 - Math.random());
+        setSwipeQueue(shuffled);
+        setCurrentSwipeIndex(0);
+        setIsSwipeMode(true);
+        setSwipeOffset({ x: 0, y: 0 });
+        setSwipeAction(null);
+    };
+
+    const handleSwipeChoice = (direction, e) => {
+        if (e) createRipple(e);
+        const currentM = swipeQueue[currentSwipeIndex];
+        setSwipeAction(direction);
+        setSwipeOffset({ x: direction === 'right' ? window.innerWidth : -window.innerWidth, y: 0 });
+        
+        if (direction === 'right' && !watchlist.includes(currentM.id)) {
+            toggleWatchlist(currentM.id);
+            showToast("Added to Watchlist!", "fa-heart");
+        }
+        
+        setTimeout(() => {
+            setCurrentSwipeIndex(prev => prev + 1);
+            setSwipeOffset({ x: 0, y: 0 });
+            setSwipeAction(null);
+            setIsDragging(false);
+        }, 350);
+    };
+
+    const handleSwipePointerDown = (e) => {
+        // Only allow dragging if not already animating out
+        if (swipeAction) return;
+        setIsDragging(true);
+        pointerStartRef.current = { x: e.clientX || e.touches?.[0]?.clientX, y: e.clientY || e.touches?.[0]?.clientY };
+    };
+
+    const handleSwipePointerMove = (e) => {
+        if (!isDragging || swipeAction) return;
+        const currentX = e.clientX || e.touches?.[0]?.clientX;
+        const currentY = e.clientY || e.touches?.[0]?.clientY;
+        const deltaX = currentX - pointerStartRef.current.x;
+        const deltaY = currentY - pointerStartRef.current.y;
+        setSwipeOffset({ x: deltaX, y: deltaY });
+    };
+
+    const handleSwipePointerUp = () => {
+        if (!isDragging || swipeAction) return;
+        setIsDragging(false);
+        if (swipeOffset.x > 120) {
+            handleSwipeChoice('right');
+        } else if (swipeOffset.x < -120) {
+            handleSwipeChoice('left');
+        } else {
+            setSwipeOffset({ x: 0, y: 0 }); // Snap back
+        }
     };
 
     // Initial Load
@@ -357,7 +422,7 @@ export default function ReelNetApp() {
 
                 <div className="topbar-actions">
                     <button className={`topbar-btn ripple-btn ${activeModal==='filters'?'active':''}`} onClick={(e) => {createRipple(e); setActiveModal(activeModal==='filters'?null:'filters')}}><i className="fa-solid fa-sliders"></i></button>
-                    <button className="topbar-btn shuffle-btn ripple-btn" title="Random Movie" onClick={(e) => {createRipple(e); const m = movies[Math.floor(Math.random()*movies.length)]; if(m) handleOpenMovie(m); }}><i className="fa-solid fa-shuffle"></i></button>
+                    <button className="topbar-btn shuffle-btn ripple-btn" title="Swipe Mode" onClick={(e) => {createRipple(e); activateSwipeMode(); }}><i className="fa-solid fa-bolt"></i></button>
                     <button className="topbar-btn ripple-btn" onClick={(e) => {createRipple(e); setActiveModal('stats');}}><i className="fa-solid fa-chart-bar"></i></button>
                     <button className="topbar-btn ripple-btn" onClick={(e) => {
                         createRipple(e); 
@@ -669,6 +734,52 @@ export default function ReelNetApp() {
                     </div>
                 </div>
             )}
+
+            {/* SWIPE MODAL (TINDER STYLE) */}
+            <div className={`modal-overlay ${isSwipeMode ? 'active' : ''}`} style={{zIndex: 2000, background: 'rgba(0,0,0,0.95)'}}>
+                {isSwipeMode && swipeQueue[currentSwipeIndex] && (
+                    <div className="swipe-container">
+                        <button className="close-btn ripple-btn" onClick={() => setIsSwipeMode(false)} style={{position: 'absolute', top: '20px', right: '20px', zIndex: 10}}><i className="fa-solid fa-xmark"></i></button>
+                        
+                        <div className="swipe-card-stack">
+                            <div className={`swipe-card ${swipeAction ? `swipe-out-${swipeAction}` : ''}`}
+                                 style={{ 
+                                    transform: `translate(${swipeOffset.x}px, ${swipeOffset.y}px) rotate(${swipeOffset.x * 0.05}deg)`,
+                                    transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)'
+                                 }}
+                                 onPointerDown={handleSwipePointerDown}
+                                 onPointerMove={handleSwipePointerMove}
+                                 onPointerUp={handleSwipePointerUp}
+                                 onPointerLeave={handleSwipePointerUp}
+                            >
+                                <img src={swipeQueue[currentSwipeIndex].poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Poster" draggable="false" />
+                                <div className="swipe-card-overlay">
+                                    <div className="swipe-card-info">
+                                        <h2>{swipeQueue[currentSwipeIndex].title}</h2>
+                                        <div className="swipe-card-meta">
+                                            <span>{swipeQueue[currentSwipeIndex].year}</span>
+                                            <span style={{color: 'var(--gold)'}}><i className="fa-solid fa-star"></i> {swipeQueue[currentSwipeIndex].rating}</span>
+                                        </div>
+                                        <div className="swipe-card-genres">
+                                            {swipeQueue[currentSwipeIndex].genres?.slice(0, 3).map(g => <span key={g}>{g}</span>)}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Action Stamps */}
+                                    <div className="swipe-stamp nope-stamp" style={{ opacity: swipeOffset.x < -20 ? Math.min(Math.abs(swipeOffset.x)/100, 1) : 0 }}>PASS</div>
+                                    <div className="swipe-stamp like-stamp" style={{ opacity: swipeOffset.x > 20 ? Math.min(swipeOffset.x/100, 1) : 0 }}>WATCH</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="swipe-actions">
+                            <button className="swipe-btn nope-btn" onClick={(e) => handleSwipeChoice('left', e)}><i className="fa-solid fa-xmark"></i></button>
+                            <button className="swipe-btn info-btn" onClick={(e) => { createRipple(e); setIsSwipeMode(false); handleOpenMovie(swipeQueue[currentSwipeIndex]); }}><i className="fa-solid fa-info"></i></button>
+                            <button className="swipe-btn like-btn" onClick={(e) => handleSwipeChoice('right', e)}><i className="fa-solid fa-heart"></i></button>
+                        </div>
+                    </div>
+                )}
+            </div>
 
         </>
     );
