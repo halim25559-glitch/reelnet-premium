@@ -545,9 +545,10 @@ export default function ReelNetApp() {
                                     <button className="share-btn ripple-btn" title="Share on Reddit" onClick={(e)=>{createRipple(e); window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(`Watch ${currentMovie.title} on ReelNet`)}`, "_blank")}}><i className="fa-brands fa-reddit-alien"></i></button>
                                     <button className="share-btn ripple-btn" title="Copy Link" onClick={(e)=>{createRipple(e); navigator.clipboard.writeText(`${currentMovie.title} (${currentMovie.year})\n${window.location.href}`); showToast("Copied!","fa-link"); emitParticles(e.clientX, e.clientY, "#46d369", 10); }}><i className="fa-solid fa-link"></i></button>
                                 </div>
+                            </div>
 
-                                <div className="similar-section">
-                                    <h4><i className="fa-solid fa-wand-magic-sparkles"></i> You May Also Like</h4>
+                            <div className="similar-section" style={{gridColumn: '1 / -1'}}>
+                                <h4><i className="fa-solid fa-wand-magic-sparkles"></i> You May Also Like</h4>
                                     <div className="similar-list">
                                         {similarMovies.map(m => (
                                             <div key={m.id} className="similar-card" onClick={() => handleOpenMovie(m)}>
@@ -557,7 +558,7 @@ export default function ReelNetApp() {
                                     </div>
                                 </div>
 
-                                <div className="comments-section">
+                                <div className="comments-section" style={{gridColumn: '1 / -1'}}>
                                     <h4><i className="fa-solid fa-comments"></i> Reviews <span>({comments.length})</span></h4>
                                     <div className="comment-form">
                                         <div className="comment-input-row">
@@ -581,7 +582,6 @@ export default function ReelNetApp() {
                                         ))}
                                     </div>
                                 </div>
-                            </div>
                         </div>
                     )}
                 </div>
