@@ -2,7 +2,7 @@
   "name": "ReelNet Premium Guide",
   "short_name": "ReelNet",
   "description": "Discover, vote, and rank the best Netflix shows and movies.",
-  "start_url": "/index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#E50914",
