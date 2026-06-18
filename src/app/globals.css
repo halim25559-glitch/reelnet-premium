@@ -204,6 +204,13 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
 .n-badge { position: absolute; top: 8px; right: 8px; z-index: 5; background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 900; letter-spacing: 0.5px; padding: 2px 6px; border-radius: 3px; }
 .original-badge { position: absolute; bottom: 10px; left: 10px; background: var(--accent); color: #fff; padding: 4px 10px; border-radius: var(--r-xs); font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; z-index: 2; }
 .original-badge span { font-weight: 500; font-size: 0.65rem; letter-spacing: 1px; }
+/* Multi-Platform Badges */
+.badge-netflix { color: #E50914 !important; }
+.badge-hbo { color: #9B51E0 !important; }
+.badge-disney { color: #1f80e0 !important; }
+.badge-prime { color: #00A8E1 !important; }
+.badge-apple { color: #ffffff !important; }
+.badge-other { color: #ff9900 !important; }
 
 .rank-badge { position: absolute; top: 8px; left: 8px; z-index: 5; width: 28px; height: 28px; border-radius: 50%; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; color: #fff; }
 .rank-badge.gold { background: linear-gradient(135deg, #f5c518, #e8a100); box-shadow: 0 2px 8px var(--gold-glow); }

@@ -251,7 +251,9 @@ export default function ReelNetApp() {
             const r = parseFloat(m.rating) || 0; const y = parseInt(m.year) || 0;
             const matchR = r >= filters.minRating;
             const matchY = (y >= filters.minYear || isNaN(filters.minYear)) && (y <= filters.maxYear || isNaN(filters.maxYear));
-            return matchSearch && matchGenre && matchR && matchY;
+            const matchPlatform = filters.platform === "all" || m.platform === filters.platform;
+            
+            return matchSearch && matchGenre && matchR && matchY && matchPlatform;
         });
         arr.sort((a, b) => {
             switch(sortMode) {
@@ -324,11 +326,22 @@ export default function ReelNetApp() {
     };
 
     const toggleWatchlist = (id) => {
-        let newW = [...watchlist];
-        if(newW.includes(id)) { newW = newW.filter(x => x!==id); showToast("Removed from Watchlist", "fa-bookmark"); }
-        else { newW.push(id); showToast("Added to Watchlist!", "fa-bookmark"); }
-        setWatchlist(newW);
-        localStorage.setItem('reelnet_watchlist', JSON.stringify(newW));
+        const newWatchlist = watchlist.includes(id) ? watchlist.filter(x => x !== id) : [...watchlist, id];
+        setWatchlist(newWatchlist);
+        localStorage.setItem('reelnet_watchlist', JSON.stringify(newWatchlist));
+        showToast(watchlist.includes(id) ? "Removed from Watchlist" : "Added to Watchlist", watchlist.includes(id) ? "fa-minus" : "fa-check");
+    };
+
+    const getPlatformDetails = (platformStr) => {
+        const platforms = {
+            "netflix": { name: "Netflix", icon: "N", colorClass: "badge-netflix", searchUrl: "https://www.netflix.com/search?q=" },
+            "hbo": { name: "HBO Max", icon: "HBO", colorClass: "badge-hbo", searchUrl: "https://play.max.com/search?q=" },
+            "disney": { name: "Disney+", icon: "D+", colorClass: "badge-disney", searchUrl: "https://www.disneyplus.com/search?q=" },
+            "prime": { name: "Prime Video", icon: "prime", colorClass: "badge-prime", searchUrl: "https://www.amazon.com/s?k=" },
+            "apple": { name: "Apple TV+", icon: "tv+", colorClass: "badge-apple", searchUrl: "https://tv.apple.com/search?q=" },
+            "other": { name: "Stream", icon: "▶", colorClass: "badge-other", searchUrl: "https://www.google.com/search?q=" }
+        };
+        return platforms[platformStr || "netflix"] || platforms["netflix"];
     };
 
     const submitVote = async (id, e) => {
@@ -475,6 +488,18 @@ export default function ReelNetApp() {
                 </div>
                 <div className="filter-body">
                     <div className="filter-group">
+                        <label>Platform</label>
+                        <select value={filters.platform || "all"} onChange={e => setFilters({...filters, platform: e.target.value})} style={{width: '100%', padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', color: 'white', marginTop: '8px'}}>
+                            <option value="all">All Platforms</option>
+                            <option value="netflix">Netflix</option>
+                            <option value="hbo">HBO Max</option>
+                            <option value="disney">Disney+</option>
+                            <option value="prime">Prime Video</option>
+                            <option value="apple">Apple TV+</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div className="filter-group">
                         <label>Minimum Rating</label>
                         <div className="range-wrapper">
                             <input type="range" min="0" max="10" step="0.5" value={filters.minRating} onChange={e => setFilters({...filters, minRating: parseFloat(e.target.value)})} />
@@ -491,7 +516,7 @@ export default function ReelNetApp() {
                     </div>
                     <div className="filter-actions">
                         <button className="primary-btn ripple-btn" onClick={(e) => {createRipple(e); setActiveModal(null); showToast("Filters applied", "fa-sliders")}}>Apply</button>
-                        <button className="secondary-btn ripple-btn" onClick={(e) => {createRipple(e); setFilters({minRating:0, minYear:1900, maxYear:2025})}}>Reset</button>
+                        <button className="secondary-btn ripple-btn" onClick={(e) => {createRipple(e); setFilters({minRating:0, minYear:1900, maxYear:2025, platform: 'all'})}}>Reset</button>
                     </div>
                 </div>
             </div>
@@ -511,25 +536,28 @@ export default function ReelNetApp() {
                 </aside>
 
                 <main className="main-content">
-                    {heroMovie && (
-                        <section className="hero-banner">
-                            <div className="hero-bg" style={{backgroundImage: `url(${heroMovie.poster})`}}></div>
-                            <div className="hero-overlay">
-                                <span className="hero-badge"><i className="fa-solid fa-fire"></i> Featured Pick</span>
-                                <h1>{heroMovie.title}</h1>
-                                <p className="hero-desc">{heroMovie.synopsis}</p>
-                                <div className="hero-meta">
-                                    <span className="hero-year">{heroMovie.year}</span>
-                                    <span className="hero-rating"><i className="fa-solid fa-star"></i> {heroMovie.rating}</span>
+                    {heroMovie && (() => {
+                        const heroPlatform = getPlatformDetails(heroMovie.platform);
+                        return (
+                            <section className="hero-banner">
+                                <div className="hero-bg" style={{backgroundImage: `url(${heroMovie.poster})`}}></div>
+                                <div className="hero-overlay">
+                                    <span className={`hero-badge ${heroPlatform.colorClass}`}><i className="fa-solid fa-fire"></i> Featured {heroPlatform.name} Pick</span>
+                                    <h1>{heroMovie.title}</h1>
+                                    <p className="hero-desc">{heroMovie.synopsis}</p>
+                                    <div className="hero-meta">
+                                        <span className="hero-year">{heroMovie.year}</span>
+                                        <span className="hero-rating"><i className="fa-solid fa-star"></i> {heroMovie.rating}</span>
+                                    </div>
+                                    <div className="hero-actions">
+                                        <button className="play-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(`${heroPlatform.searchUrl}${encodeURIComponent(heroMovie.title)}`, "_blank")}}><i className="fa-solid fa-play"></i> Watch on {heroPlatform.name}</button>
+                                        <button className="vote-btn ripple-btn" onClick={(e)=>submitVote(heroMovie.id, e)}><i className="fa-solid fa-heart"></i> Vote</button>
+                                        <button className={`watchlist-btn ripple-btn ${watchlist.includes(heroMovie.id)?'added':''}`} onClick={(e)=>{createRipple(e); toggleWatchlist(heroMovie.id)}}><i className="fa-solid fa-plus"></i> Watchlist</button>
+                                    </div>
                                 </div>
-                                <div className="hero-actions">
-                                    <button className="play-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(`https://www.netflix.com/search?q=${encodeURIComponent(heroMovie.title)}`, "_blank")}}><i className="fa-solid fa-play"></i> Watch on Netflix</button>
-                                    <button className="vote-btn ripple-btn" onClick={(e)=>submitVote(heroMovie.id, e)}><i className="fa-solid fa-heart"></i> Vote</button>
-                                    <button className={`watchlist-btn ripple-btn ${watchlist.includes(heroMovie.id)?'added':''}`} onClick={(e)=>{createRipple(e); toggleWatchlist(heroMovie.id)}}><i className="fa-solid fa-plus"></i> Watchlist</button>
-                                </div>
-                            </div>
-                        </section>
-                    )}
+                            </section>
+                        );
+                    })()}
 
                     <div className="content-header">
                         <div className="mobile-category-selector mobile-only">
@@ -616,7 +644,10 @@ export default function ReelNetApp() {
                             <div className="modal-top-row">
                                 <div className="modal-poster">
                                     <img src={currentMovie.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Movie Poster"/>
-                                    <div className="original-badge">N <span>ORIGINAL</span></div>
+                                    {(() => {
+                                        const p = getPlatformDetails(currentMovie.platform);
+                                        return <div className={`original-badge ${p.colorClass}`}>{p.icon} <span>ORIGINAL</span></div>;
+                                    })()}
                                 </div>
                                 <div className="modal-info">
                                     <h2>{currentMovie.title}</h2>
@@ -636,7 +667,9 @@ export default function ReelNetApp() {
                                 </div>
 
                                 <div className="modal-actions">
-                                    <button className="play-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(`https://www.netflix.com/search?q=${encodeURIComponent(currentMovie.title)}`, "_blank")}}><i className="fa-solid fa-play"></i> Watch</button>
+                                        <button className="primary-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(`${getPlatformDetails(currentMovie.platform).searchUrl}${encodeURIComponent(currentMovie.title)}`, "_blank")}}>
+                                            <i className="fa-solid fa-play"></i> Watch on {getPlatformDetails(currentMovie.platform).name}
+                                        </button>
                                     <button className={`vote-btn ripple-btn ${globalVotes[currentMovie.id]?'voted':''}`} onClick={(e)=>submitVote(currentMovie.id, e)}><i className="fa-solid fa-heart"></i> <span>{globalVotes[currentMovie.id]||0}</span></button>
                                     <button className={`watchlist-btn ripple-btn ${watchlist.includes(currentMovie.id)?'added':''}`} onClick={(e)=>{createRipple(e); toggleWatchlist(currentMovie.id)}}>
                                         {watchlist.includes(currentMovie.id) ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-plus"></i>}
