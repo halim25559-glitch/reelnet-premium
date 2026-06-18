@@ -329,7 +329,7 @@ export default function ReelNetApp() {
 
                 <div className="topbar-actions">
                     <button className={`topbar-btn ripple-btn ${activeModal==='filters'?'active':''}`} onClick={(e) => {createRipple(e); setActiveModal(activeModal==='filters'?null:'filters')}}><i className="fa-solid fa-sliders"></i></button>
-                    <button className="topbar-btn ripple-btn" onClick={(e) => {createRipple(e); const m = movies[Math.floor(Math.random()*movies.length)]; if(m) handleOpenMovie(m); }}><i className="fa-solid fa-shuffle"></i></button>
+                    <button className="topbar-btn shuffle-btn ripple-btn" title="Random Movie" onClick={(e) => {createRipple(e); const m = movies[Math.floor(Math.random()*movies.length)]; if(m) handleOpenMovie(m); }}><i className="fa-solid fa-shuffle"></i></button>
                     <button className="topbar-btn ripple-btn" onClick={(e) => {createRipple(e); setActiveModal('stats');}}><i className="fa-solid fa-chart-bar"></i></button>
                     <button className="topbar-btn ripple-btn" onClick={(e) => {
                         createRipple(e); 

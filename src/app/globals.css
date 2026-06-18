@@ -128,6 +128,17 @@ body.light-mode .topbar { background: rgba(245,245,247,0.9); }
 .signin-btn { background: var(--accent); color: #fff; border: none; padding: 8px 18px; font-family: var(--font); font-size: 0.9rem; font-weight: 700; border-radius: var(--r-sm); cursor: pointer; transition: var(--t-base); }
 .signin-btn:hover { background: #ff1f2d; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-glow); }
 
+/* Premium Shuffle Button */
+.shuffle-btn { background: linear-gradient(135deg, #e50914, #ff5252); color: white !important; border: none !important; box-shadow: 0 4px 15px rgba(229,9,20,0.3); animation: pulse-glow 2s infinite; }
+.shuffle-btn:hover { background: linear-gradient(135deg, #ff1f2d, #ff7b7b) !important; transform: scale(1.1) rotate(5deg) !important; box-shadow: 0 6px 20px rgba(229,9,20,0.5) !important; }
+.shuffle-btn i { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.shuffle-btn:hover i { transform: rotate(180deg); }
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 0 0 rgba(229,9,20,0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(229,9,20,0); }
+    100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); }
+}
+
 /* === ADVANCED FILTER PANEL === */
 .filter-panel { background: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 20px 32px; display: none; opacity: 0; transform: translateY(-10px); transition: var(--t-base); }
 .filter-panel.active { display: block; opacity: 1; transform: translateY(0); }
