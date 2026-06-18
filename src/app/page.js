@@ -188,6 +188,16 @@ export default function ReelNetApp() {
         }).sort((a,b) => b.score - a.score).slice(0,8).map(s => s.m);
     }, [currentMovie, movies]);
 
+    // Parallax Effect
+    useEffect(() => {
+        const handleScroll = () => {
+            const heroBg = document.querySelector('.hero-bg');
+            if(heroBg) heroBg.style.backgroundPositionY = `${window.scrollY * 0.4}px`;
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     // Intersection Observer for Infinite Scroll
     useEffect(() => {
         if(loading) return;
@@ -282,6 +292,22 @@ export default function ReelNetApp() {
         localStorage.removeItem('reelnet_auth');
         setActiveModal(null);
         showToast("Logged out", "fa-right-from-bracket");
+    };
+
+    const handleCardMouseMove = (e) => {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+        const cx = rect.width / 2; const cy = rect.height / 2;
+        const rotateX = ((y - cy) / cy) * -12;
+        const rotateY = ((x - cx) / cx) * 12;
+        card.style.setProperty('--rx', `${rotateX}deg`);
+        card.style.setProperty('--ry', `${rotateY}deg`);
+    };
+    const handleCardMouseLeave = (e) => {
+        const card = e.currentTarget;
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
     };
 
     const handleKeyDown = (e) => {
@@ -451,7 +477,7 @@ export default function ReelNetApp() {
                                     rankBadge = <div className={`rank-badge ${rc}`}>{r}</div>;
                                 }
                                 return (
-                                    <div key={m.id} className="movie-card" tabIndex="0" onClick={()=>handleOpenMovie(m)}>
+                                    <div key={m.id} className="movie-card" tabIndex="0" onClick={()=>handleOpenMovie(m)} onMouseMove={handleCardMouseMove} onMouseLeave={handleCardMouseLeave}>
                                         {rankBadge}
                                         <div className="n-badge">N</div>
                                         <img src={m.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt={`Poster for ${m.title}`}/>
