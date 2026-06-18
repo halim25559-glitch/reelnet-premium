@@ -508,14 +508,15 @@ export default function ReelNetApp() {
                     <button className="close-btn ripple-btn" onClick={handleCloseModal}><i className="fa-solid fa-xmark"></i></button>
                     {currentMovie && (
                         <div className="modal-body">
-                            <div className="modal-poster">
-                                <img src={currentMovie.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Movie Poster"/>
-                                <div className="original-badge">N <span>ORIGINAL</span></div>
-                            </div>
-                            <div className="modal-info">
-                                <h2>{currentMovie.title}</h2>
-                                <div className="modal-meta">
-                                    <span className="meta-badge">{currentMovie.year}</span>
+                            <div className="modal-top-row">
+                                <div className="modal-poster">
+                                    <img src={currentMovie.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Movie Poster"/>
+                                    <div className="original-badge">N <span>ORIGINAL</span></div>
+                                </div>
+                                <div className="modal-info">
+                                    <h2>{currentMovie.title}</h2>
+                                    <div className="modal-meta">
+                                        <span className="meta-badge">{currentMovie.year}</span>
                                     <span className="meta-rating"><i className="fa-solid fa-star"></i> {currentMovie.rating}</span>
                                 </div>
                                 <div className="modal-genres">
@@ -546,8 +547,9 @@ export default function ReelNetApp() {
                                     <button className="share-btn ripple-btn" title="Copy Link" onClick={(e)=>{createRipple(e); navigator.clipboard.writeText(`${currentMovie.title} (${currentMovie.year})\n${window.location.href}`); showToast("Copied!","fa-link"); emitParticles(e.clientX, e.clientY, "#46d369", 10); }}><i className="fa-solid fa-link"></i></button>
                                 </div>
                             </div>
+                            </div>
 
-                            <div className="similar-section" style={{gridColumn: '1 / -1'}}>
+                            <div className="similar-section">
                                 <h4><i className="fa-solid fa-wand-magic-sparkles"></i> You May Also Like</h4>
                                     <div className="similar-list">
                                         {similarMovies.map(m => (
@@ -558,7 +560,7 @@ export default function ReelNetApp() {
                                     </div>
                                 </div>
 
-                                <div className="comments-section" style={{gridColumn: '1 / -1'}}>
+                                <div className="comments-section">
                                     <h4><i className="fa-solid fa-comments"></i> Reviews <span>({comments.length})</span></h4>
                                     <div className="comment-form">
                                         <div className="comment-input-row">
