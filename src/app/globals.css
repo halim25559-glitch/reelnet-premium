@@ -294,23 +294,43 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
 @media (max-width: 900px) {
     .dashboard-layout { flex-direction: column; }
     .sidebar { width: 100%; padding: 14px 16px; border-right: none; border-bottom: 1px solid var(--border); overflow-x: auto; max-height: none; position: relative; top: 0; }
+    .sidebar::-webkit-scrollbar { display: none; }
     .genre-list { display: flex; gap: 6px; }
     .genre-btn { width: auto; white-space: nowrap; margin-bottom: 0; border-radius: var(--r-full); border: 1px solid var(--border); padding: 7px 14px; font-size: 0.82rem; }
     .genre-btn.active { border: 1px solid var(--accent); }
     .main-content { padding: 16px; }
-    .modal-body { flex-direction: column; }
-    .modal-poster { flex: 0 0 200px; }
-    .modal-poster img { position: static; }
-    .modal-info { padding: 20px; max-height: none; }
+    .modal-body { flex-direction: column; overflow-y: auto; }
+    .modal-poster { flex: none; width: 100%; max-width: 250px; margin: 0 auto; aspect-ratio: 2/3; border-radius: var(--r-md); overflow: hidden; margin-top: 20px; box-shadow: var(--shadow-md); }
+    .modal-poster img { position: static; object-fit: cover; }
+    .modal-info { padding: 20px 16px; max-height: none; text-align: center; }
+    .modal-info h2 { font-size: 1.5rem; }
+    .modal-meta { justify-content: center; }
+    .modal-genres { justify-content: center; }
+    .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .play-btn { grid-column: span 2; justify-content: center; }
+    .vote-btn, .watchlist-btn { justify-content: center; width: 100%; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .filter-body { flex-direction: column; gap: 16px; }
 }
 @media (max-width: 600px) {
     .topbar { padding: 10px 14px; flex-wrap: wrap; gap: 10px; }
     .search-container { width: 100%; max-width: 100%; order: 3; }
-    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    
+    .hero-banner { height: auto; min-height: 280px; }
+    .hero-overlay { padding: 24px 16px; justify-content: flex-end; }
+    .hero-banner h1 { font-size: 1.8rem; }
+    .hero-desc { font-size: 0.85rem; -webkit-line-clamp: 2; margin-bottom: 10px; }
+    .hero-actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; gap: 8px; }
+    .hero-actions .play-btn { grid-column: span 2; justify-content: center; }
+    .hero-actions .vote-btn, .hero-actions .watchlist-btn { justify-content: center; width: 100%; }
+
     .content-header h2 { font-size: 1.3rem; }
-    .hero-banner { height: 240px; }
+    /* Force exactly 2 columns on very small screens */
+    .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    
+    .comment-input-row { flex-wrap: wrap; }
+    .comment-input-row input { flex: 1 1 100%; order: 3; margin-top: 6px; }
+    .comment-submit { flex: 1 1 100%; order: 4; margin-top: 4px; }
 }
 
 /* === SKELETON LOADER === */
