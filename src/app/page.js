@@ -39,7 +39,9 @@ export default function ReelNetApp() {
     const [movies, setMovies] = useState([]);
     const [globalVotes, setGlobalVotes] = useState({});
     const [watchlist, setWatchlist] = useState([]);
-    const [auth, setAuth] = useState({ username: '', avatar: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png' });
+    const [auth, setAuth] = useState(null);
+    const [authTab, setAuthTab] = useState('login'); // 'login' or 'register'
+    const [authForm, setAuthForm] = useState({ email: '', password: '', username: '' });
     const [theme, setTheme] = useState('dark');
     
     const [loading, setLoading] = useState(true);
@@ -248,7 +250,9 @@ export default function ReelNetApp() {
         const input = document.getElementById('comment-text');
         if(!input.value.trim() || !currentMovie) return;
         try {
-            const res = await fetch('/api/comment', { method:'POST', body:JSON.stringify({ movieId: currentMovie.id, username: auth.username, avatar: auth.avatar, text: input.value.trim() })});
+            const username = auth ? auth.username : 'Guest';
+            const avatar = auth ? auth.avatar : 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png';
+            const res = await fetch('/api/comment', { method:'POST', body:JSON.stringify({ movieId: currentMovie.id, username, avatar, text: input.value.trim() })});
             const data = await res.json();
             if(data.success) {
                 setComments([data.comment, ...comments]);
@@ -258,6 +262,26 @@ export default function ReelNetApp() {
                 if(b) { const r = b.getBoundingClientRect(); emitParticles(r.left+r.width/2, r.top+r.height/2, "#46d369", 10); }
             }
         } catch(e) {}
+    };
+
+    const handleAuthSubmit = (e) => {
+        e.preventDefault();
+        if(!authForm.email || !authForm.password) { showToast("Please fill all fields", "fa-triangle-exclamation"); return; }
+        
+        const username = authTab === 'register' && authForm.username ? authForm.username : authForm.email.split('@')[0];
+        const newAuth = { username, avatar: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png' };
+        
+        setAuth(newAuth);
+        localStorage.setItem('reelnet_auth', JSON.stringify(newAuth));
+        setActiveModal(null);
+        showToast(authTab === 'login' ? `Welcome back, ${username}!` : "Account created successfully!", "fa-user-check");
+    };
+
+    const handleLogout = () => {
+        setAuth(null);
+        localStorage.removeItem('reelnet_auth');
+        setActiveModal(null);
+        showToast("Logged out", "fa-right-from-bracket");
     };
 
     const handleKeyDown = (e) => {
@@ -314,9 +338,13 @@ export default function ReelNetApp() {
                     }}>
                         {theme === 'light' ? <i className="fa-solid fa-moon"></i> : <i className="fa-solid fa-sun"></i>}
                     </button>
-                    <div className="user-profile" onClick={() => setActiveModal('auth')}>
-                        <img src={auth.avatar} alt="Profile" />
-                    </div>
+                    {auth ? (
+                        <div className="user-profile" onClick={() => setActiveModal('profile')}>
+                            <img src={auth.avatar} alt="Profile" />
+                        </div>
+                    ) : (
+                        <button className="signin-btn ripple-btn" onClick={(e) => {createRipple(e); setActiveModal('auth')}}>Sign In</button>
+                    )}
                 </div>
             </nav>
 
@@ -350,7 +378,7 @@ export default function ReelNetApp() {
             </div>
 
             <div className="dashboard-layout">
-                <aside className="sidebar">
+                <aside className="sidebar desktop-only">
                     <h3 className="sidebar-title"><i className="fa-solid fa-layer-group"></i> Categories</h3>
                     <ul className="genre-list">
                         {genres.map(g => (
@@ -385,7 +413,12 @@ export default function ReelNetApp() {
                     )}
 
                     <div className="content-header">
-                        <h2>{currentCategory === "All" ? "All Movies & Shows" : currentCategory}</h2>
+                        <div className="mobile-category-selector mobile-only">
+                            <select value={currentCategory} onChange={(e)=>{setCurrentCategory(e.target.value); if(e.target.value==="🏆 Top Ranked") setSortMode("votes");}}>
+                                {genres.map(g => <option key={g} value={g}>{g}</option>)}
+                            </select>
+                        </div>
+                        <h2 className="desktop-only">{currentCategory === "All" ? "All Movies & Shows" : currentCategory}</h2>
                         <span className="result-count">{filteredMovies.length} titles</span>
                         <div className="sort-container">
                             <select className="sort-select" value={sortMode} onChange={e=>setSortMode(e.target.value)}>
@@ -497,8 +530,8 @@ export default function ReelNetApp() {
                                     <h4><i className="fa-solid fa-comments"></i> Reviews <span>({comments.length})</span></h4>
                                     <div className="comment-form">
                                         <div className="comment-input-row">
-                                            <img src={auth.avatar} className="mini-avatar" alt="Avatar"/>
-                                            <input type="text" id="comment-text" placeholder={`Write a review as ${auth.username || 'Guest'}...`} maxLength="500" onKeyDown={e => {if(e.key==='Enter') submitComment()}} />
+                                            <img src={auth ? auth.avatar : 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'} className="mini-avatar" alt="Avatar"/>
+                                            <input type="text" id="comment-text" placeholder={`Write a review as ${auth ? auth.username : 'Guest'}...`} maxLength="500" onKeyDown={e => {if(e.key==='Enter') submitComment()}} />
                                             <button className="comment-submit ripple-btn" id="comment-submit" onClick={(e)=>{createRipple(e); submitComment()}}><i className="fa-solid fa-paper-plane"></i></button>
                                         </div>
                                     </div>
@@ -539,31 +572,70 @@ export default function ReelNetApp() {
                 </div>
             </div>
 
-            {/* AUTH MODAL */}
+            {/* AUTH MODAL (Login/Register) */}
             <div className={`modal-overlay ${activeModal==='auth'?'active':''}`} onClick={(e)=>{if(e.target===e.currentTarget) setActiveModal(null)}}>
                 <div className="modal-content auth-modal-content">
                     <button className="close-btn ripple-btn" onClick={()=>setActiveModal(null)}><i className="fa-solid fa-xmark"></i></button>
                     <div className="auth-body">
-                        <h2><i className="fa-solid fa-user-circle"></i> User Profile</h2>
-                        <p className="auth-desc">Log in to sync your reviews and identity across ReelNet.</p>
-                        <div className="auth-form">
-                            <div className="avatar-selection">
-                                <label>Select Avatar</label>
-                                <div className="avatar-grid">
-                                    {['https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png', 'https://placehold.co/100x100/e50914/ffffff?text=U1', 'https://placehold.co/100x100/46d369/ffffff?text=U2', 'https://placehold.co/100x100/f5c518/ffffff?text=U3'].map(src => (
-                                        <img key={src} src={src} className={`avatar-option ${auth.avatar===src?'active':''}`} onClick={() => setAuth({...auth, avatar: src})} alt="Avatar Option" />
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="filter-group" style={{marginTop:'10px'}}>
-                                <label>Display Name</label>
-                                <input type="text" className="auth-input" value={auth.username} onChange={e => setAuth({...auth, username: e.target.value})} placeholder="e.g. MovieBuff99" maxLength="20" />
-                            </div>
-                            <button className="primary-btn ripple-btn" style={{width:'100%', marginTop:'20px'}} onClick={(e)=>{createRipple(e); localStorage.setItem('reelnet_auth', JSON.stringify(auth)); setActiveModal(null); showToast("Profile Saved!", "fa-user-check");}}>Save Profile</button>
+                        <div className="auth-tabs">
+                            <button className={authTab==='login'?'active':''} onClick={(e)=>{e.preventDefault(); setAuthTab('login');}}>Sign In</button>
+                            <button className={authTab==='register'?'active':''} onClick={(e)=>{e.preventDefault(); setAuthTab('register');}}>Sign Up</button>
                         </div>
+                        <h2>{authTab==='login' ? 'Welcome Back' : 'Create Account'}</h2>
+                        <p className="auth-desc">{authTab==='login' ? 'Sign in to sync your reviews.' : 'Join ReelNet to vote and review titles.'}</p>
+                        
+                        <form className="auth-form" onSubmit={handleAuthSubmit}>
+                            {authTab === 'register' && (
+                                <div className="input-group">
+                                    <label>Display Name</label>
+                                    <input type="text" className="auth-input" placeholder="e.g. MovieBuff99" value={authForm.username} onChange={e=>setAuthForm({...authForm, username: e.target.value})} />
+                                </div>
+                            )}
+                            <div className="input-group">
+                                <label>Email Address</label>
+                                <input type="email" className="auth-input" placeholder="name@example.com" value={authForm.email} onChange={e=>setAuthForm({...authForm, email: e.target.value})} required />
+                            </div>
+                            <div className="input-group">
+                                <label>Password</label>
+                                <input type="password" className="auth-input" placeholder="••••••••" value={authForm.password} onChange={e=>setAuthForm({...authForm, password: e.target.value})} required />
+                            </div>
+                            <button type="submit" className="primary-btn ripple-btn" style={{width:'100%', marginTop:'20px'}}>
+                                {authTab==='login' ? 'Sign In' : 'Sign Up'}
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            {/* PROFILE MODAL */}
+            {auth && (
+                <div className={`modal-overlay ${activeModal==='profile'?'active':''}`} onClick={(e)=>{if(e.target===e.currentTarget) setActiveModal(null)}}>
+                    <div className="modal-content auth-modal-content">
+                        <button className="close-btn ripple-btn" onClick={()=>setActiveModal(null)}><i className="fa-solid fa-xmark"></i></button>
+                        <div className="auth-body text-center">
+                            <img src={auth.avatar} alt="Profile" className="profile-large-avatar" />
+                            <h2 style={{marginTop:'16px'}}>{auth.username}</h2>
+                            <p className="auth-desc">Member of ReelNet</p>
+                            
+                            <div className="avatar-selection" style={{textAlign:'left', marginTop:'24px'}}>
+                                <label>Change Avatar</label>
+                                <div className="avatar-grid">
+                                    {['https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png', 'https://placehold.co/100x100/e50914/ffffff?text=U1', 'https://placehold.co/100x100/46d369/ffffff?text=U2', 'https://placehold.co/100x100/f5c518/ffffff?text=U3'].map(src => (
+                                        <img key={src} src={src} className={`avatar-option ${auth.avatar===src?'active':''}`} onClick={() => {
+                                            const newAuth = {...auth, avatar: src};
+                                            setAuth(newAuth); localStorage.setItem('reelnet_auth', JSON.stringify(newAuth));
+                                        }} alt="Avatar Option" />
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <button className="secondary-btn ripple-btn logout-btn" onClick={handleLogout}>
+                                <i className="fa-solid fa-right-from-bracket"></i> Log Out
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </>
     );
