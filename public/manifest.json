@@ -8,12 +8,12 @@
   "theme_color": "#E50914",
   "icons": [
     {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png",
+      "src": "/logo.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png",
+      "src": "/logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }

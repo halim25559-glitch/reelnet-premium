@@ -11,7 +11,7 @@ export const metadata = {
     description: 'Discover, vote, and rank the best Netflix shows and movies.',
     url: 'https://reelnet-premium.vercel.app',
     siteName: 'ReelNet',
-    images: [{ url: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png' }],
+    images: [{ url: '/logo.png' }],
     type: 'website',
   },
   verification: {

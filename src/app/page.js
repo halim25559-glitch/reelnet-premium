@@ -331,7 +331,7 @@ export default function ReelNetApp() {
 
             <nav className="topbar">
                 <div className="logo" onClick={() => { setCurrentCategory("🏆 Top Ranked"); setSearchQuery(""); }}>
-                    <div className="logo-icon"><i className="fa-solid fa-clapperboard"></i></div>
+                    <img src="/logo.png" alt="ReelNet Logo" style={{width: '38px', height: '38px', borderRadius: '8px', objectFit: 'cover', boxShadow: '0 4px 12px rgba(229,9,20,0.4)'}} />
                     <span>Reel<span className="accent">Net</span></span>
                 </div>
                 
