@@ -202,8 +202,8 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
 .card-rating { color: var(--gold); font-weight: 600; }
 
 .n-badge { position: absolute; top: 8px; right: 8px; z-index: 5; background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 900; letter-spacing: 0.5px; padding: 2px 6px; border-radius: 3px; }
-.original-badge { position: absolute; bottom: 10px; left: 10px; background: var(--accent); color: #fff; padding: 4px 10px; border-radius: var(--r-xs); font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; z-index: 2; }
-.original-badge span { font-weight: 500; font-size: 0.65rem; letter-spacing: 1px; }
+.original-badge { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.8); color: #fff; padding: 4px 10px; border-radius: var(--r-xs); font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; z-index: 2; border: 1px solid rgba(255,255,255,0.1); }
+.original-badge span { font-weight: 500; font-size: 0.65rem; letter-spacing: 1px; color: #fff !important; }
 /* Multi-Platform Badges */
 .badge-netflix { color: #E50914 !important; }
 .badge-hbo { color: #9B51E0 !important; }
@@ -451,6 +451,15 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
 .ai-result { animation: fadeVideoIn 0.5s ease forwards; }
 .ai-recommendation-card { margin: 0 auto; max-width: 220px; text-align: left; background: transparent; cursor: pointer; transition: transform 0.2s; }
 .ai-recommendation-card:hover { transform: scale(1.05); }
+
+/* === SERVICES GRID === */
+.services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+@media (min-width: 768px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
+.service-btn { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r-sm); color: var(--text-primary); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: left; }
+.service-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+.service-btn.selected { border-color: transparent; }
+.service-name { pointer-events: none; }
+.service-icon { opacity: 0.8; pointer-events: none; }
 
 /* === SKELETON LOADER === */
 .skeleton-card { aspect-ratio: 2/3; border-radius: var(--r-md); background: var(--bg-card); overflow: hidden; position: relative; box-shadow: var(--shadow-sm); }

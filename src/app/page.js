@@ -54,7 +54,7 @@ export default function ReelNetApp() {
     
     const [currentCategory, setCurrentCategory] = useState("🏆 Top Ranked");
     const [sortMode, setSortMode] = useState("votes");
-    const [filters, setFilters] = useState({ minRating: 0, minYear: 1900, maxYear: 2025 });
+    const [filters, setFilters] = useState({ minRating: 0, minYear: 1900, maxYear: 2025, platforms: [] });
     
     const [renderedCount, setRenderedCount] = useState(60);
     const batchSize = 60;
@@ -251,7 +251,7 @@ export default function ReelNetApp() {
             const r = parseFloat(m.rating) || 0; const y = parseInt(m.year) || 0;
             const matchR = r >= filters.minRating;
             const matchY = (y >= filters.minYear || isNaN(filters.minYear)) && (y <= filters.maxYear || isNaN(filters.maxYear));
-            const matchPlatform = filters.platform === "all" || m.platform === filters.platform;
+            const matchPlatform = filters.platforms.length === 0 || filters.platforms.includes(m.platform) || (filters.platforms.includes("netflix") && !m.platform);
             
             return matchSearch && matchGenre && matchR && matchY && matchPlatform;
         });
@@ -488,16 +488,43 @@ export default function ReelNetApp() {
                 </div>
                 <div className="filter-body">
                     <div className="filter-group">
-                        <label>Platform</label>
-                        <select value={filters.platform || "all"} onChange={e => setFilters({...filters, platform: e.target.value})} style={{width: '100%', padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 'var(--r-sm)', color: 'white', marginTop: '8px'}}>
-                            <option value="all">All Platforms</option>
-                            <option value="netflix">Netflix</option>
-                            <option value="hbo">HBO Max</option>
-                            <option value="disney">Disney+</option>
-                            <option value="prime">Prime Video</option>
-                            <option value="apple">Apple TV+</option>
-                            <option value="other">Other</option>
-                        </select>
+                        <div className="filter-group-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'}}>
+                            <label style={{margin: 0}}>Streaming Services</label>
+                            <button className="text-btn ripple-btn" onClick={(e) => {createRipple(e); setFilters({...filters, platforms: []})}} style={{fontSize: '0.8rem', color: 'var(--text-dim)', background: 'transparent', border: 'none', cursor: 'pointer'}}><i className="fa-solid fa-plus"></i> Add All</button>
+                        </div>
+                        <div className="services-grid">
+                            {[
+                                { id: 'netflix', name: 'Netflix', color: '#E50914' },
+                                { id: 'prime', name: 'Prime Video', color: '#00A8E1' },
+                                { id: 'hbo', name: 'HBO MAX', color: '#9B51E0' },
+                                { id: 'disney', name: 'Disney+', color: '#1f80e0' },
+                                { id: 'apple', name: 'Apple TV+', color: '#ffffff' },
+                                { id: 'other', name: 'Other', color: '#ff9900' }
+                            ].map(p => {
+                                const isSelected = filters.platforms.length === 0 || filters.platforms.includes(p.id);
+                                return (
+                                    <button 
+                                        key={p.id}
+                                        className={`service-btn ripple-btn ${isSelected ? 'selected' : ''}`}
+                                        style={isSelected ? { backgroundColor: p.color, color: p.color === '#ffffff' ? '#000' : '#fff' } : {}}
+                                        onClick={(e) => {
+                                            createRipple(e);
+                                            let newPlatforms = [...filters.platforms];
+                                            if (filters.platforms.length === 0) {
+                                                newPlatforms = [p.id];
+                                            } else {
+                                                if (newPlatforms.includes(p.id)) newPlatforms = newPlatforms.filter(x => x !== p.id);
+                                                else newPlatforms.push(p.id);
+                                            }
+                                            setFilters({...filters, platforms: newPlatforms});
+                                        }}
+                                    >
+                                        <span className="service-name">{p.name}</span>
+                                        <span className="service-icon"><i className={`fa-solid ${isSelected ? 'fa-check' : 'fa-plus'}`}></i></span>
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
                     <div className="filter-group">
                         <label>Minimum Rating</label>
@@ -516,7 +543,7 @@ export default function ReelNetApp() {
                     </div>
                     <div className="filter-actions">
                         <button className="primary-btn ripple-btn" onClick={(e) => {createRipple(e); setActiveModal(null); showToast("Filters applied", "fa-sliders")}}>Apply</button>
-                        <button className="secondary-btn ripple-btn" onClick={(e) => {createRipple(e); setFilters({minRating:0, minYear:1900, maxYear:2025, platform: 'all'})}}>Reset</button>
+                        <button className="secondary-btn ripple-btn" onClick={(e) => {createRipple(e); setFilters({minRating:0, minYear:1900, maxYear:2025, platforms: []})}}>Reset</button>
                     </div>
                 </div>
             </div>
