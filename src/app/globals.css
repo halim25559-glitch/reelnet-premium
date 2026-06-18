@@ -313,24 +313,40 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
     .filter-body { flex-direction: column; gap: 16px; }
 }
 @media (max-width: 600px) {
-    .topbar { padding: 10px 14px; flex-wrap: wrap; gap: 10px; }
-    .search-container { width: 100%; max-width: 100%; order: 3; }
+    .topbar { padding: 10px 14px; flex-wrap: wrap; gap: 8px; justify-content: space-between; }
+    .logo span { font-size: 1.2rem; }
+    .topbar-actions { gap: 6px; }
+    .topbar-btn { width: 34px; height: 34px; font-size: 0.9rem; }
+    .user-profile img { width: 34px; height: 34px; }
+    
+    .search-container { flex: 1 1 100%; max-width: 100%; order: 3; margin-top: 4px; }
+    #search-input { padding: 12px 35px 12px 40px; font-size: 0.95rem; }
     
     .hero-banner { height: auto; min-height: 280px; }
-    .hero-overlay { padding: 24px 16px; justify-content: flex-end; }
-    .hero-banner h1 { font-size: 1.8rem; }
+    .hero-overlay { padding: 20px 16px; justify-content: flex-end; }
+    .hero-banner h1 { font-size: 1.6rem; word-wrap: break-word; }
     .hero-desc { font-size: 0.85rem; -webkit-line-clamp: 2; margin-bottom: 10px; }
-    .hero-actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; gap: 8px; }
-    .hero-actions .play-btn { grid-column: span 2; justify-content: center; }
-    .hero-actions .vote-btn, .hero-actions .watchlist-btn { justify-content: center; width: 100%; }
+    .hero-actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; gap: 6px; }
+    .hero-actions .play-btn { grid-column: span 2; justify-content: center; font-size: 0.85rem; padding: 10px; }
+    .hero-actions .vote-btn, .hero-actions .watchlist-btn { justify-content: center; width: 100%; font-size: 0.8rem; padding: 10px; }
 
     .content-header h2 { font-size: 1.3rem; }
+    .sort-select { max-width: 130px; font-size: 0.75rem; padding: 6px; }
+    
     /* Force exactly 2 columns on very small screens */
     .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .card-title { font-size: 0.8rem; }
+    
+    .modal-content { width: 95%; transform: translateY(20px) scale(0.95); }
+    .modal-actions .play-btn, .modal-actions .vote-btn, .modal-actions .watchlist-btn { padding: 10px; font-size: 0.85rem; white-space: normal; text-align: center; }
     
     .comment-input-row { flex-wrap: wrap; }
     .comment-input-row input { flex: 1 1 100%; order: 3; margin-top: 6px; }
     .comment-submit { flex: 1 1 100%; order: 4; margin-top: 4px; }
+    
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat-card { padding: 12px; }
+    .stat-number { font-size: 1.5rem; }
 }
 
 /* === SKELETON LOADER === */
