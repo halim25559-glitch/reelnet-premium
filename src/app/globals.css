@@ -340,7 +340,7 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
     .modal-poster { flex: none; position: relative; width: 100%; max-width: 100%; margin: 0; border-radius: 0; overflow: hidden; margin-top: 0; box-shadow: none; aspect-ratio: auto; }
     .modal-poster::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px; background: linear-gradient(to top, var(--bg-secondary) 0%, transparent 100%); }
     .modal-poster img { position: static; width: 100%; object-fit: cover; height: 50vh; border-radius: 0; }
-    .original-badge { top: 16px; left: 16px; z-index: 10; }
+    .original-badge { top: 16px; left: 16px; bottom: auto; z-index: 10; }
     .modal-info { padding: 24px 20px; max-height: none; text-align: left; }
     .modal-info h2 { font-size: 1.6rem; }
     .modal-meta { justify-content: flex-start; }
