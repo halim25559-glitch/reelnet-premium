@@ -311,7 +311,7 @@ export default function ReelNetApp() {
                 
                 <div className="search-container" ref={searchRef}>
                     <i className="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" placeholder="Search 2,500+ titles..." value={searchQuery} onChange={(e) => handleSearch(e.target.value)} onFocus={() => searchQuery.length>1 && setIsDropdownActive(true)} />
+                    <input type="text" id="search-input" placeholder="Search 2,500+ titles..." value={searchQuery} onChange={(e) => handleSearch(e.target.value)} onFocus={() => searchQuery.length>1 && setIsDropdownActive(true)} />
                     {searchQuery && <span className="search-clear visible" onClick={() => handleSearch("")}><i className="fa-solid fa-xmark"></i></span>}
                     
                     <div className={`search-dropdown ${isDropdownActive ? 'active' : ''}`}>
