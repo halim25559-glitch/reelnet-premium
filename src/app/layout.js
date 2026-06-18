@@ -5,7 +5,15 @@ const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const metadata = {
   title: 'ReelNet — Premium Streaming Guide',
-  description: 'Discover, vote, and rank the best Netflix shows and movies.',
+  description: 'Discover, vote, and rank the best Netflix shows and movies. Your ultimate guide to what to watch next.',
+  openGraph: {
+    title: 'ReelNet — Premium Streaming Guide',
+    description: 'Discover, vote, and rank the best Netflix shows and movies.',
+    url: 'https://reelnet-premium.vercel.app',
+    siteName: 'ReelNet',
+    images: [{ url: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png' }],
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }) {
