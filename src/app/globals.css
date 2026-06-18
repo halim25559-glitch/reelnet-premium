@@ -426,21 +426,6 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
 @keyframes swipeOutLeft { to { transform: translate(-150vw, 50px) rotate(-30deg); opacity: 0; } }
 @keyframes swipeOutRight { to { transform: translate(150vw, 50px) rotate(30deg); opacity: 0; } }
 
-/* === AUTO-PLAY TRAILERS === */
-.hero-video { position: absolute; top: 50%; left: 50%; width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; transform: translate(-50%, -50%); opacity: 0; animation: fadeVideoIn 3s forwards 2s; pointer-events: none; z-index: 1; filter: saturate(1.2) brightness(0.8); }
-.hero-bg { overflow: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-.hero-bg::after { content: ''; position: absolute; inset: 0; background: inherit; z-index: 2; opacity: 1; animation: fadePosterOut 3s forwards 2s; }
-
-.modal-poster { position: sticky; top: 0; overflow: hidden; border-radius: var(--r-md); }
-.modal-video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; border-radius: var(--r-md); }
-.modal-video { position: absolute; top: 50%; left: 50%; width: 300%; height: 100%; transform: translate(-50%, -50%); opacity: 0; animation: fadeVideoIn 2s forwards 1.5s; pointer-events: none; }
-.fade-out-poster { opacity: 1; transition: opacity 2s ease 1.5s; }
-.modal-poster:hover .fade-out-poster { opacity: 0; }
-.modal-poster:hover .modal-video { opacity: 1; animation: none; }
-
-@keyframes fadeVideoIn { to { opacity: 0.8; } }
-@keyframes fadePosterOut { to { opacity: 0; } }
-
 /* === AI ASSISTANT === */
 .ai-fab { position: fixed; bottom: 30px; right: 30px; width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; font-size: 1.8rem; box-shadow: 0 8px 30px rgba(99,102,241,0.5); cursor: pointer; z-index: 900; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; align-items: center; justify-content: center; }
 .ai-fab:hover { transform: scale(1.1) rotate(10deg); }

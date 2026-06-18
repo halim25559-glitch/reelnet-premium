@@ -513,14 +513,7 @@ export default function ReelNetApp() {
                 <main className="main-content">
                     {heroMovie && (
                         <section className="hero-banner">
-                            <div className="hero-bg" style={{backgroundImage: `url(${heroMovie.poster})`}}>
-                                <iframe 
-                                    className="hero-video"
-                                    src="https://www.youtube.com/embed/oqxA158iNZA?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=oqxA158iNZA&playsinline=1"
-                                    frameBorder="0"
-                                    allow="autoplay; encrypted-media"
-                                ></iframe>
-                            </div>
+                            <div className="hero-bg" style={{backgroundImage: `url(${heroMovie.poster})`}}></div>
                             <div className="hero-overlay">
                                 <span className="hero-badge"><i className="fa-solid fa-fire"></i> Featured Pick</span>
                                 <h1>{heroMovie.title}</h1>
@@ -622,18 +615,8 @@ export default function ReelNetApp() {
                         <div className="modal-body">
                             <div className="modal-top-row">
                                 <div className="modal-poster">
-                                    <div className="modal-poster-img-wrapper" style={{position: 'relative', width: '100%', height: '100%', zIndex: 2}}>
-                                        <img src={currentMovie.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Movie Poster" style={{position:'relative', zIndex:5}} className="fade-out-poster"/>
-                                    </div>
-                                    <div className="modal-video-wrapper">
-                                        <iframe 
-                                            className="modal-video"
-                                            src="https://www.youtube.com/embed/oqxA158iNZA?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=oqxA158iNZA&playsinline=1"
-                                            frameBorder="0"
-                                            allow="autoplay; encrypted-media"
-                                        ></iframe>
-                                    </div>
-                                    <div className="original-badge" style={{zIndex: 10}}>N <span>ORIGINAL</span></div>
+                                    <img src={currentMovie.poster || "https://placehold.co/500x750/0a0a0f/E50914?text=N"} alt="Movie Poster"/>
+                                    <div className="original-badge">N <span>ORIGINAL</span></div>
                                 </div>
                                 <div className="modal-info">
                                     <h2>{currentMovie.title}</h2>
