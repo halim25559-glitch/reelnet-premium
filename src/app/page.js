@@ -539,8 +539,11 @@ export default function ReelNetApp() {
 
                                 <div className="share-row">
                                     <span className="share-label">Share:</span>
-                                    <button className="share-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I recommend "${currentMovie.title}" on Netflix! ⭐${currentMovie.rating} #ReelNet \n\n${window.location.href}`)}`, "_blank")}}><i className="fa-brands fa-x-twitter"></i></button>
-                                    <button className="share-btn ripple-btn" onClick={(e)=>{createRipple(e); navigator.clipboard.writeText(`${currentMovie.title} (${currentMovie.year})\n${window.location.href}`); showToast("Copied!","fa-link"); emitParticles(e.clientX, e.clientY, "#46d369", 10); }}><i className="fa-solid fa-link"></i></button>
+                                    <button className="share-btn ripple-btn" title="Share on Facebook" onClick={(e)=>{createRipple(e); window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank")}}><i className="fa-brands fa-facebook-f"></i></button>
+                                    <button className="share-btn ripple-btn" title="Share on X (Twitter)" onClick={(e)=>{createRipple(e); window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I recommend "${currentMovie.title}" on Netflix! ⭐${currentMovie.rating} #ReelNet \n\n${window.location.href}`)}`, "_blank")}}><i className="fa-brands fa-x-twitter"></i></button>
+                                    <button className="share-btn ripple-btn" title="Share on LINE" onClick={(e)=>{createRipple(e); window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(window.location.href)}`, "_blank")}}><i className="fa-brands fa-line"></i></button>
+                                    <button className="share-btn ripple-btn" title="Share on Reddit" onClick={(e)=>{createRipple(e); window.open(`https://www.reddit.com/submit?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(`Watch ${currentMovie.title} on ReelNet`)}`, "_blank")}}><i className="fa-brands fa-reddit-alien"></i></button>
+                                    <button className="share-btn ripple-btn" title="Copy Link" onClick={(e)=>{createRipple(e); navigator.clipboard.writeText(`${currentMovie.title} (${currentMovie.year})\n${window.location.href}`); showToast("Copied!","fa-link"); emitParticles(e.clientX, e.clientY, "#46d369", 10); }}><i className="fa-solid fa-link"></i></button>
                                 </div>
 
                                 <div className="similar-section">
