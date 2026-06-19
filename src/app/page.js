@@ -76,9 +76,10 @@ export default function ReelNetApp() {
     
     // AI Assistant
     const [isAiModalActive, setIsAiModalActive] = useState(false);
-    const [aiStep, setAiStep] = useState(0);
-    const [aiAnswers, setAiAnswers] = useState({ mood: null, era: null });
-    const [aiRecommendation, setAiRecommendation] = useState(null);
+    const [chatHistory, setChatHistory] = useState([{ role: 'bot', text: 'สวัสดีครับ! อยากดูหนังแนวไหน พิมพ์บอกผมได้เลยครับ (เช่น หาหนังแอคชั่น, แนะนำหนังตลก, หนังไซไฟใหม่ๆ)' }]);
+    const [chatInput, setChatInput] = useState('');
+    const [isBotTyping, setIsBotTyping] = useState(false);
+    const chatEndRef = useRef(null);
 
     const searchRef = useRef(null);
     const observerTarget = useRef(null);
@@ -105,65 +106,74 @@ export default function ReelNetApp() {
 
     // AI Handlers
     const handleAiStart = () => {
-        setAiStep(1);
-        setAiAnswers({ mood: null, era: null });
+        if (chatHistory.length === 0) {
+            setChatHistory([{ role: 'bot', text: 'สวัสดีครับ! อยากดูหนังแนวไหน พิมพ์บอกผมได้เลยครับ (เช่น หาหนังแอคชั่น, แนะนำหนังตลก, หนังไซไฟใหม่ๆ)' }]);
+        }
         setIsAiModalActive(true);
     };
 
-    const handleAiAnswer = (key, val) => {
-        setAiAnswers(prev => ({...prev, [key]: val}));
-        if (aiStep === 1) setAiStep(2);
-        else if (aiStep === 2) {
-            setAiStep(3); // Loading
-            setTimeout(() => {
-                const mood = aiAnswers.mood; // Previous answer
-                const era = val; // Current answer
-
-                let candidates = movies.filter(movie => {
-                    // Filter out fake posters to give a premium feel
-                    if (!movie.poster || movie.poster.includes("placehold.co")) return false;
-
-                    const genres = movie.genres ? movie.genres.map(g => g.toLowerCase()) : [];
-                    const year = parseInt(movie.year) || 2020;
-                    
-                    // Mood logic
-                    let moodMatch = false;
-                    if (mood === 'happy') {
-                        moodMatch = genres.includes('comedy') || genres.includes('family') || genres.includes('animation') || genres.includes('romance');
-                    } else if (mood === 'thrill') {
-                        moodMatch = genres.includes('action') || genres.includes('thriller') || genres.includes('horror') || genres.includes('sci-fi');
-                    } else if (mood === 'deep') {
-                        moodMatch = genres.includes('drama') || genres.includes('documentary') || genres.includes('biography');
-                    } else {
-                        moodMatch = true;
-                    }
-
-                    // Era logic
-                    let eraMatch = false;
-                    if (era === 'modern') eraMatch = year >= 2010;
-                    else if (era === 'classic') eraMatch = year < 2010;
-                    else eraMatch = true;
-
-                    return moodMatch && eraMatch;
-                });
-
-                // Fallback to top-rated movies if filters are too strict
-                if (candidates.length === 0) {
-                    candidates = movies.filter(m => parseFloat(m.rating) > 8.0 && m.poster && !m.poster.includes("placehold.co"));
-                }
-                if (candidates.length === 0) candidates = movies; // absolute fallback
-
-                // Sort by highest rating
-                candidates.sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
-
-                // Pick from the top 5 to ensure quality
-                const top5 = candidates.slice(0, 5);
-                const finalPick = top5[Math.floor(Math.random() * top5.length)];
-
-                setAiRecommendation(finalPick);
-                setAiStep(4); // Result
-            }, 3000); // 3 seconds of "thinking"
+    useEffect(() => {
+        if (isAiModalActive && chatEndRef.current) {
+            chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
+    }, [chatHistory, isBotTyping, isAiModalActive]);
+
+    const generateBotResponse = (text) => {
+        const lowerText = text.toLowerCase();
+        let targetGenre = null;
+        let era = 'any';
+        
+        if (lowerText.match(/แอคชั่น|มันส์|บู๊|action|มันๆ/)) targetGenre = ['action', 'adventure'];
+        else if (lowerText.match(/ตลก|ฮา|คลายเครียด|comedy/)) targetGenre = ['comedy', 'family'];
+        else if (lowerText.match(/ผี|สยอง|น่ากลัว|หลอน|horror/)) targetGenre = ['horror', 'thriller'];
+        else if (lowerText.match(/เศร้า|ร้องไห้|ดราม่า|ซึ้ง|drama/)) targetGenre = ['drama', 'romance'];
+        else if (lowerText.match(/ไซไฟ|อวกาศ|ล้ำ|sci-fi/)) targetGenre = ['sci-fi', 'fantasy'];
+        else if (lowerText.match(/การ์ตูน|ดิสนีย์|อนิเมะ|animation|disney/)) targetGenre = ['animation', 'family'];
+
+        if (lowerText.match(/เก่า|คลาสสิค|classic/)) era = 'classic';
+        if (lowerText.match(/ใหม่|ล่าสุด|modern/)) era = 'modern';
+
+        let candidates = movies.filter(movie => {
+            if (!movie.poster || movie.poster.includes("placehold.co")) return false;
+            const genres = movie.genres ? movie.genres.map(g => g.toLowerCase()) : [];
+            const year = parseInt(movie.year) || 2020;
+            let genreMatch = targetGenre ? targetGenre.some(g => genres.includes(g)) : true;
+            let eraMatch = era === 'classic' ? year < 2010 : (era === 'modern' ? year >= 2010 : true);
+            return genreMatch && eraMatch;
+        });
+
+        if (candidates.length === 0 && targetGenre) {
+            candidates = movies.filter(m => m.poster && !m.poster.includes("placehold.co"));
+        }
+        if (candidates.length === 0) candidates = movies;
+
+        candidates.sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
+        const topCandidates = candidates.slice(0, 10);
+        const finalPick = topCandidates[Math.floor(Math.random() * topCandidates.length)];
+
+        let replyText = "นี่คือหนังที่น่าจะตรงใจคุณครับ! ลองดูเรื่องนี้สิ:";
+        if (targetGenre && targetGenre.includes('action')) replyText = "สายบู๊จัดไป! เรื่องนี้มันส์ทะลุจอแน่นอนครับ:";
+        if (targetGenre && targetGenre.includes('comedy')) replyText = "อยากคลายเครียดใช่ไหม? เรื่องนี้ฮากระจายแน่นอนครับ:";
+        if (targetGenre && targetGenre.includes('horror')) replyText = "เตรียมหมอนไว้ปิดตาเลยครับ เรื่องนี้หลอนสุดๆ:";
+        if (!targetGenre) replyText = "ไม่แน่ใจว่าชอบแนวไหนเป็นพิเศษ แต่เรื่องนี้คะแนนสูงและฮิตมากครับ ห้ามพลาดเลย!";
+
+        return { text: replyText, movie: finalPick };
+    };
+
+    const handleChatSubmit = (e) => {
+        e.preventDefault();
+        if (!chatInput.trim() || isBotTyping) return;
+
+        const userText = chatInput.trim();
+        setChatHistory(prev => [...prev, { role: 'user', text: userText }]);
+        setChatInput('');
+        setIsBotTyping(true);
+
+        setTimeout(() => {
+            const response = generateBotResponse(userText);
+            setChatHistory(prev => [...prev, { role: 'bot', text: response.text, movie: response.movie }]);
+            setIsBotTyping(false);
+        }, 1500 + Math.random() * 1000);
     };
 
     const activateSwipeMode = () => {
@@ -932,62 +942,47 @@ export default function ReelNetApp() {
             {/* AI ASSISTANT MODAL */}
             {isAiModalActive && (
                 <div className="modal-overlay active" style={{zIndex: 3000}}>
-                    <div className="modal-content ai-modal-content">
+                    <div className="modal-content ai-chat-content">
                         <button className="close-btn ripple-btn" onClick={() => setIsAiModalActive(false)}><i className="fa-solid fa-xmark"></i></button>
-                        <div className="ai-modal-body">
-                            <div className="ai-header">
-                                <i className="fa-solid fa-robot ai-icon"></i>
-                                <h2>ReelNet AI Assistant</h2>
-                                <p>Let me find the perfect movie for you.</p>
-                            </div>
-                            
-                            {aiStep === 1 && (
-                                <div className="ai-question">
-                                    <h3>What's your mood today?</h3>
-                                    <div className="ai-options">
-                                        <button onClick={()=>handleAiAnswer('mood', 'happy')}>😄 Light & Fun</button>
-                                        <button onClick={()=>handleAiAnswer('mood', 'thrill')}>😱 Thrilling & Tense</button>
-                                        <button onClick={()=>handleAiAnswer('mood', 'deep')}>🤔 Deep & Thoughtful</button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {aiStep === 2 && (
-                                <div className="ai-question">
-                                    <h3>Do you prefer modern or classic?</h3>
-                                    <div className="ai-options">
-                                        <button onClick={()=>handleAiAnswer('era', 'modern')}>🚀 Modern (2010s+)</button>
-                                        <button onClick={()=>handleAiAnswer('era', 'classic')}>📼 Classic (Pre-2010)</button>
-                                        <button onClick={()=>handleAiAnswer('era', 'any')}>🎲 Surprise Me</button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {aiStep === 3 && (
-                                <div className="ai-loading">
-                                    <div className="ai-spinner"></div>
-                                    <h3>Analyzing millions of data points...</h3>
-                                    <p>Finding your perfect match based on your vibe.</p>
-                                </div>
-                            )}
-
-                            {aiStep === 4 && aiRecommendation && (
-                                <div className="ai-result">
-                                    <h3>🎯 Perfect Match Found!</h3>
-                                    <div className="movie-card ai-recommendation-card" onClick={() => { setIsAiModalActive(false); handleOpenMovie(aiRecommendation); }}>
-                                        <div className="card-image-wrapper"><img src={aiRecommendation.poster} alt="Poster" /></div>
-                                        <div className="card-info">
-                                            <span className="card-title">{aiRecommendation.title}</span>
-                                            <div className="card-meta">
-                                                <span className="card-year">{aiRecommendation.year}</span>
-                                                <span className="card-rating"><i className="fa-solid fa-star"></i> {aiRecommendation.rating}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button className="primary-btn ripple-btn" style={{marginTop: '20px', width: '100%'}} onClick={(e) => { createRipple(e); setIsAiModalActive(false); handleOpenMovie(aiRecommendation); }}>View Details</button>
-                                </div>
-                            )}
+                        <div className="ai-chat-header">
+                            <i className="fa-solid fa-robot ai-icon-small"></i>
+                            <h2>ReelNet AI</h2>
                         </div>
+                        <div className="ai-chat-history">
+                            {chatHistory.map((msg, idx) => (
+                                <div key={idx} className={`chat-message ${msg.role}`}>
+                                    <div className="chat-bubble">
+                                        {msg.text}
+                                        {msg.movie && (
+                                            <div className="chat-movie-card" onClick={() => { setIsAiModalActive(false); handleOpenMovie(msg.movie); }}>
+                                                <img src={msg.movie.poster} alt="Poster" />
+                                                <div className="chat-movie-info">
+                                                    <h4>{msg.movie.title}</h4>
+                                                    <span><i className="fa-solid fa-star"></i> {msg.movie.rating}</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            {isBotTyping && (
+                                <div className="chat-message bot">
+                                    <div className="chat-bubble typing-indicator">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                            )}
+                            <div ref={chatEndRef} />
+                        </div>
+                        <form className="ai-chat-input" onSubmit={handleChatSubmit}>
+                            <input 
+                                type="text" 
+                                placeholder="พิมพ์ข้อความ... (เช่น หาหนังผี)" 
+                                value={chatInput}
+                                onChange={(e) => setChatInput(e.target.value)}
+                            />
+                            <button type="submit" disabled={!chatInput.trim() || isBotTyping}><i className="fa-solid fa-paper-plane"></i></button>
+                        </form>
                     </div>
                 </div>
             )}
