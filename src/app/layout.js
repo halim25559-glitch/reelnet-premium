@@ -27,6 +27,14 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
       <body className={inter.className}>
+        <script dangerouslySetInnerHTML={{__html: `
+          document.addEventListener('contextmenu', event => event.preventDefault());
+          document.addEventListener('keydown', event => {
+            if ((event.ctrlKey || event.metaKey) && ['c', 'a', 's', 'x'].includes(event.key.toLowerCase())) {
+              event.preventDefault();
+            }
+          });
+        `}} />
         <div id="particle-container" className="particle-container"></div>
         {children}
       </body>
