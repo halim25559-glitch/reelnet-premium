@@ -120,31 +120,80 @@ export default function ReelNetApp() {
 
     const generateBotResponse = (text) => {
         const lowerText = text.toLowerCase();
+        
+        // 1. Small Talk & Greetings
+        if (lowerText.match(/สวัสดี|ดีครับ|ดีค่ะ|หวัดดี|hi|hello/)) {
+            return { text: "สวัสดีครับ! ผมคือ ReelNet AI ผู้ช่วยส่วนตัวของคุณ อยากให้ผมแนะนำหนังแนวไหน พิมพ์บอกมาได้เลยครับ (เช่น หาหนังแอคชั่น, แนะนำหนังตลก, อยากดูหนังซอมบี้)", movie: null };
+        }
+        if (lowerText.match(/ขอบคุณ|ขอบใจ|thank|thx/)) {
+            return { text: "ด้วยความยินดีครับ! ขอให้สนุกกับการดูหนังนะครับ มีอะไรให้ช่วยอีกบอกได้เสมอเลย 😊", movie: null };
+        }
+        if (lowerText.match(/ทำอะไรได้บ้าง|คือใคร|ช่วยอะไร/)) {
+            return { text: "ผมสามารถคัดกรองและแนะนำหนังจากฐานข้อมูลให้คุณได้ครับ! แค่บอกอารมณ์ของคุณตอนนี้ แนวหนังที่อยากดู หรือคีย์เวิร์ดเช่น 'เวทมนตร์', 'อวกาศ', 'สืบสวน' ได้เลยครับ", movie: null };
+        }
+
         let targetGenre = null;
         let era = 'any';
+        let searchKeywords = [];
         
-        if (lowerText.match(/แอคชั่น|มันส์|บู๊|action|มันๆ/)) targetGenre = ['action', 'adventure'];
-        else if (lowerText.match(/ตลก|ฮา|คลายเครียด|comedy/)) targetGenre = ['comedy', 'family'];
-        else if (lowerText.match(/ผี|สยอง|น่ากลัว|หลอน|horror/)) targetGenre = ['horror', 'thriller'];
-        else if (lowerText.match(/เศร้า|ร้องไห้|ดราม่า|ซึ้ง|drama/)) targetGenre = ['drama', 'romance'];
-        else if (lowerText.match(/ไซไฟ|อวกาศ|ล้ำ|sci-fi/)) targetGenre = ['sci-fi', 'fantasy'];
-        else if (lowerText.match(/การ์ตูน|ดิสนีย์|อนิเมะ|animation|disney/)) targetGenre = ['animation', 'family'];
+        // 2. Genre & Mood Parsing
+        if (lowerText.match(/แอคชั่น|มันส์|บู๊|action|มันๆ|ต่อสู้/)) targetGenre = ['action', 'adventure'];
+        else if (lowerText.match(/ตลก|ฮา|คลายเครียด|comedy|ขำ/)) targetGenre = ['comedy', 'family'];
+        else if (lowerText.match(/ผี|สยอง|น่ากลัว|หลอน|horror|ระทึก/)) targetGenre = ['horror', 'thriller'];
+        else if (lowerText.match(/เศร้า|ร้องไห้|ดราม่า|ซึ้ง|drama|น้ำตา/)) targetGenre = ['drama', 'romance'];
+        else if (lowerText.match(/ไซไฟ|อวกาศ|ล้ำ|sci-fi|วิทยาศาสตร์|มนุษย์ต่างดาว/)) targetGenre = ['sci-fi', 'fantasy'];
+        else if (lowerText.match(/การ์ตูน|ดิสนีย์|อนิเมะ|animation|disney|น่ารัก/)) targetGenre = ['animation', 'family'];
+        else if (lowerText.match(/สืบสวน|ฆาตกรรม|ปริศนา|ลึกลับ|นักสืบ/)) targetGenre = ['mystery', 'crime', 'thriller'];
 
-        if (lowerText.match(/เก่า|คลาสสิค|classic/)) era = 'classic';
+        // 3. Era Parsing
+        if (lowerText.match(/เก่า|คลาสสิค|classic|ยุค/)) era = 'classic';
         if (lowerText.match(/ใหม่|ล่าสุด|modern/)) era = 'modern';
+
+        // 4. Extract specific semantic keywords (for synopsis search)
+        const possibleKeywords = ["เวทมนตร์", "นักฆ่า", "ครอบครัว", "ความรัก", "ผจญภัย", "สงคราม", "ซอมบี้", "หุ่นยนต์", "อนาคต", "สัตว์", "โรงเรียน", "สายลับ", "ซูเปอร์ฮีโร่", "ปล้น", "ตำรวจ"];
+        possibleKeywords.forEach(kw => {
+            if (lowerText.includes(kw)) searchKeywords.push(kw);
+        });
+
+        // English semantic keywords mapping (since DB is in English)
+        const keywordMapping = {
+            "เวทมนตร์": "magic", "นักฆ่า": "killer|assassin", "ครอบครัว": "family", "ความรัก": "love|romance", 
+            "ผจญภัย": "adventure", "สงคราม": "war", "ซอมบี้": "zombie", "หุ่นยนต์": "robot", 
+            "อนาคต": "future", "สัตว์": "animal|pet", "โรงเรียน": "school|high school", 
+            "สายลับ": "spy|secret agent", "ซูเปอร์ฮีโร่": "superhero", "ปล้น": "heist|robbery", "ตำรวจ": "police|cop"
+        };
 
         let candidates = movies.filter(movie => {
             if (!movie.poster || movie.poster.includes("placehold.co")) return false;
             const genres = movie.genres ? movie.genres.map(g => g.toLowerCase()) : [];
             const year = parseInt(movie.year) || 2020;
+            const synopsis = (movie.synopsis || "").toLowerCase();
+            const title = (movie.title || "").toLowerCase();
+            
             let genreMatch = targetGenre ? targetGenre.some(g => genres.includes(g)) : true;
             let eraMatch = era === 'classic' ? year < 2010 : (era === 'modern' ? year >= 2010 : true);
-            return genreMatch && eraMatch;
+            
+            let keywordMatch = true;
+            if (searchKeywords.length > 0) {
+                keywordMatch = searchKeywords.some(kw => {
+                    const engKwStr = keywordMapping[kw] || kw;
+                    const engKws = engKwStr.split('|');
+                    return engKws.some(ek => synopsis.includes(ek) || title.includes(ek)) || synopsis.includes(kw);
+                });
+            }
+
+            return genreMatch && eraMatch && keywordMatch;
         });
 
-        if (candidates.length === 0 && targetGenre) {
-            candidates = movies.filter(m => m.poster && !m.poster.includes("placehold.co"));
+        // 5. Fallbacks if too strict
+        if (candidates.length === 0) {
+            candidates = movies.filter(movie => {
+                if (!movie.poster || movie.poster.includes("placehold.co")) return false;
+                const genres = movie.genres ? movie.genres.map(g => g.toLowerCase()) : [];
+                return targetGenre ? targetGenre.some(g => genres.includes(g)) : true;
+            });
         }
+        if (candidates.length === 0) candidates = movies.filter(m => m.poster && !m.poster.includes("placehold.co"));
         if (candidates.length === 0) candidates = movies;
 
         candidates.sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
@@ -152,10 +201,13 @@ export default function ReelNetApp() {
         const finalPick = topCandidates[Math.floor(Math.random() * topCandidates.length)];
 
         let replyText = "นี่คือหนังที่น่าจะตรงใจคุณครับ! ลองดูเรื่องนี้สิ:";
-        if (targetGenre && targetGenre.includes('action')) replyText = "สายบู๊จัดไป! เรื่องนี้มันส์ทะลุจอแน่นอนครับ:";
-        if (targetGenre && targetGenre.includes('comedy')) replyText = "อยากคลายเครียดใช่ไหม? เรื่องนี้ฮากระจายแน่นอนครับ:";
-        if (targetGenre && targetGenre.includes('horror')) replyText = "เตรียมหมอนไว้ปิดตาเลยครับ เรื่องนี้หลอนสุดๆ:";
-        if (!targetGenre) replyText = "ไม่แน่ใจว่าชอบแนวไหนเป็นพิเศษ แต่เรื่องนี้คะแนนสูงและฮิตมากครับ ห้ามพลาดเลย!";
+        if (searchKeywords.length > 0) replyText = `เจอแล้วครับ! หนังที่มีเรื่องราวเกี่ยวกับ '${searchKeywords[0]}' ที่คุณน่าจะชอบ 🎯:`;
+        else if (targetGenre && targetGenre.includes('action')) replyText = "สายบู๊จัดไป! เรื่องนี้มันส์ทะลุจอแน่นอนครับ 💥:";
+        else if (targetGenre && targetGenre.includes('comedy')) replyText = "อยากคลายเครียดใช่ไหม? เรื่องนี้ฮากระจายแน่นอนครับ 😂:";
+        else if (targetGenre && targetGenre.includes('horror')) replyText = "เตรียมหมอนไว้ปิดตาเลยครับ เรื่องนี้หลอนสุดๆ 👻:";
+        else if (targetGenre && targetGenre.includes('animation')) replyText = "ภาพสวยดูเพลิน สายอนิเมชั่น/การ์ตูน ห้ามพลาดเลยครับ 🌟:";
+        else if (targetGenre && targetGenre.includes('mystery')) replyText = "ชอบแนวสืบสวนปมปริศนา ต้องลองดูเรื่องนี้เลยครับ ลุ้นระทึกแน่นอน 🕵️:";
+        else if (!targetGenre) replyText = "จากที่คุณบอกมา ผมขอเสนอเรื่องนี้ครับ คะแนนสูงและฮิตมาก ห้ามพลาดเลย! 🍿";
 
         return { text: replyText, movie: finalPick };
     };
