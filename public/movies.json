@@ -42555,5 +42555,705 @@
     "poster": "https://static.tvmaze.com/uploads/images/original_untouched/629/1573152.jpg",
     "synopsis": "A historical exploration about the eruption of Vesuvius in 79 A.D. and the preserved Roman city it left behind.Tom Hiddleston asks: Could anyone survive Pompeii's final day? Drawing on experts and intuition, he traces real Romans through the eruption.",
     "platform": "disney"
+  },
+  {
+    "id": 92597,
+    "title": "Avengers: Endgame",
+    "year": "2019",
+    "rating": "8.4",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Drama"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Avengers\\n+Endgame&font=Montserrat",
+    "synopsis": "After the devastating events of Infinity War, the Avengers assemble once more to reverse Thanos' actions.",
+    "platform": "disney"
+  },
+  {
+    "id": 92598,
+    "title": "Avengers: Infinity War",
+    "year": "2018",
+    "rating": "8.4",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Avengers\\n+Infinity+War&font=Montserrat",
+    "synopsis": "The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos.",
+    "platform": "disney"
+  },
+  {
+    "id": 92599,
+    "title": "The Lion King",
+    "year": "1994",
+    "rating": "8.5",
+    "genres": [
+      "Animation",
+      "Family",
+      "Drama"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=The+Lion+King&font=Montserrat",
+    "synopsis": "Lion prince Simba and his father are targeted by his bitter uncle, who wants to ascend the throne himself.",
+    "platform": "disney"
+  },
+  {
+    "id": 92600,
+    "title": "Frozen",
+    "year": "2013",
+    "rating": "7.4",
+    "genres": [
+      "Animation",
+      "Family",
+      "Fantasy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Frozen&font=Montserrat",
+    "synopsis": "When the newly-crowned Queen Elsa accidentally uses her power to turn things into ice to curse her home in infinite winter, her sister Anna teams up with a mountain man, his playful reindeer, and a snowman to change the weather condition.",
+    "platform": "disney"
+  },
+  {
+    "id": 92601,
+    "title": "Frozen II",
+    "year": "2019",
+    "rating": "6.8",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Frozen+II&font=Montserrat",
+    "synopsis": "Anna, Elsa, Kristoff, Olaf and Sven leave Arendelle to travel to an ancient, autumn-bound forest of an enchanted land.",
+    "platform": "disney"
+  },
+  {
+    "id": 92602,
+    "title": "Toy Story",
+    "year": "1995",
+    "rating": "8.3",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Toy+Story&font=Montserrat",
+    "synopsis": "A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.",
+    "platform": "disney"
+  },
+  {
+    "id": 92603,
+    "title": "Toy Story 3",
+    "year": "2010",
+    "rating": "8.2",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Toy+Story+3&font=Montserrat",
+    "synopsis": "The toys are mistakenly delivered to a day-care center instead of the attic right before Andy leaves for college.",
+    "platform": "disney"
+  },
+  {
+    "id": 92604,
+    "title": "Star Wars: Episode IV - A New Hope",
+    "year": "1977",
+    "rating": "8.6",
+    "genres": [
+      "Sci-Fi",
+      "Action",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Star+Wars\\n+Episode+IV+-+A+New+Hope&font=Montserrat",
+    "synopsis": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire.",
+    "platform": "disney"
+  },
+  {
+    "id": 92605,
+    "title": "Star Wars: Episode V - The Empire Strikes Back",
+    "year": "1980",
+    "rating": "8.7",
+    "genres": [
+      "Sci-Fi",
+      "Action",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Star+Wars\\n+Episode+V+-+The+Empire+Strikes+Back&font=Montserrat",
+    "synopsis": "After the Rebels are brutally overpowered by the Empire on the ice planet Hoth, Luke Skywalker begins Jedi training with Yoda.",
+    "platform": "disney"
+  },
+  {
+    "id": 92606,
+    "title": "Avatar",
+    "year": "2009",
+    "rating": "7.9",
+    "genres": [
+      "Sci-Fi",
+      "Action",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Avatar&font=Montserrat",
+    "synopsis": "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
+    "platform": "disney"
+  },
+  {
+    "id": 92607,
+    "title": "Moana",
+    "year": "2016",
+    "rating": "7.6",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Moana&font=Montserrat",
+    "synopsis": "In Ancient Polynesia, when a terrible curse incurred by the Demigod Maui reaches Moana's island, she answers the Ocean's call to seek out the Demigod to set things right.",
+    "platform": "disney"
+  },
+  {
+    "id": 92608,
+    "title": "Zootopia",
+    "year": "2016",
+    "rating": "8.0",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Zootopia&font=Montserrat",
+    "synopsis": "In a city of anthropomorphic animals, a rookie bunny cop and a cynical con artist fox must work together to uncover a conspiracy.",
+    "platform": "disney"
+  },
+  {
+    "id": 92609,
+    "title": "Black Panther",
+    "year": "2018",
+    "rating": "7.3",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Black+Panther&font=Montserrat",
+    "synopsis": "T'Challa, heir to the hidden but advanced kingdom of Wakanda, must step forward to lead his people into a new future.",
+    "platform": "disney"
+  },
+  {
+    "id": 92610,
+    "title": "Iron Man",
+    "year": "2008",
+    "rating": "7.9",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Iron+Man&font=Montserrat",
+    "synopsis": "After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil.",
+    "platform": "disney"
+  },
+  {
+    "id": 92611,
+    "title": "Thor: Ragnarok",
+    "year": "2017",
+    "rating": "7.9",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Thor\\n+Ragnarok&font=Montserrat",
+    "synopsis": "Imprisoned on the planet Sakaar, Thor must race against time to return to Asgard and stop Ragnarök.",
+    "platform": "disney"
+  },
+  {
+    "id": 92612,
+    "title": "Guardians of the Galaxy",
+    "year": "2014",
+    "rating": "8.0",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Guardians+of+the+Galaxy&font=Montserrat",
+    "synopsis": "A group of intergalactic criminals must pull together to stop a fanatical warrior with plans to purge the universe.",
+    "platform": "disney"
+  },
+  {
+    "id": 92613,
+    "title": "Up",
+    "year": "2009",
+    "rating": "8.3",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Up&font=Montserrat",
+    "synopsis": "78-year-old Carl Fredricksen travels to Paradise Falls in his house equipped with balloons, inadvertently taking a young stowaway.",
+    "platform": "disney"
+  },
+  {
+    "id": 92614,
+    "title": "Finding Nemo",
+    "year": "2003",
+    "rating": "8.2",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Finding+Nemo&font=Montserrat",
+    "synopsis": "After his son is captured in the Great Barrier Reef and taken to Sydney, a timid clownfish sets out on a journey to bring him home.",
+    "platform": "disney"
+  },
+  {
+    "id": 92615,
+    "title": "Inside Out",
+    "year": "2015",
+    "rating": "8.1",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Inside+Out&font=Montserrat",
+    "synopsis": "After young Riley is uprooted from her Midwest life and moved to San Francisco, her emotions - Joy, Fear, Anger, Disgust and Sadness - conflict on how best to navigate a new city, house, and school.",
+    "platform": "disney"
+  },
+  {
+    "id": 92616,
+    "title": "Coco",
+    "year": "2017",
+    "rating": "8.4",
+    "genres": [
+      "Animation",
+      "Family",
+      "Music"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Coco&font=Montserrat",
+    "synopsis": "Aspiring musician Miguel, confronted with his family's ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer.",
+    "platform": "disney"
+  },
+  {
+    "id": 92617,
+    "title": "Monsters, Inc.",
+    "year": "2001",
+    "rating": "8.1",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Monsters,+Inc.&font=Montserrat",
+    "synopsis": "In order to power the city, monsters have to scare children so that they scream. However, the children are toxic to the monsters, and after a child gets through, 2 monsters realize things may not be what they think.",
+    "platform": "disney"
+  },
+  {
+    "id": 92618,
+    "title": "The Incredibles",
+    "year": "2004",
+    "rating": "8.0",
+    "genres": [
+      "Animation",
+      "Family",
+      "Action"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=The+Incredibles&font=Montserrat",
+    "synopsis": "A family of undercover superheroes, while trying to live the quiet suburban life, are forced into action to save the world.",
+    "platform": "disney"
+  },
+  {
+    "id": 92619,
+    "title": "WALL·E",
+    "year": "2008",
+    "rating": "8.4",
+    "genres": [
+      "Animation",
+      "Family",
+      "Sci-Fi"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=WALL·E&font=Montserrat",
+    "synopsis": "In the distant future, a small waste-collecting robot inadvertently embarks on a space journey that will ultimately decide the fate of mankind.",
+    "platform": "disney"
+  },
+  {
+    "id": 92620,
+    "title": "Ratatouille",
+    "year": "2007",
+    "rating": "8.1",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Ratatouille&font=Montserrat",
+    "synopsis": "A rat who can cook makes an unusual alliance with a young kitchen worker at a famous Paris restaurant.",
+    "platform": "disney"
+  },
+  {
+    "id": 92621,
+    "title": "Aladdin",
+    "year": "1992",
+    "rating": "8.0",
+    "genres": [
+      "Animation",
+      "Family",
+      "Romance"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Aladdin&font=Montserrat",
+    "synopsis": "A kindhearted street urchin and a power-hungry Grand Vizier vie for a magic lamp that has the power to make their deepest wishes come true.",
+    "platform": "disney"
+  },
+  {
+    "id": 92622,
+    "title": "Beauty and the Beast",
+    "year": "1991",
+    "rating": "8.0",
+    "genres": [
+      "Animation",
+      "Family",
+      "Romance"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Beauty+and+the+Beast&font=Montserrat",
+    "synopsis": "A prince cursed to spend his days as a hideous monster sets out to regain his humanity by earning a young woman's love.",
+    "platform": "disney"
+  },
+  {
+    "id": 92623,
+    "title": "The Little Mermaid",
+    "year": "1989",
+    "rating": "7.6",
+    "genres": [
+      "Animation",
+      "Family",
+      "Fantasy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=The+Little+Mermaid&font=Montserrat",
+    "synopsis": "A mermaid princess makes a Faustian bargain in an attempt to become human and win a prince's love.",
+    "platform": "disney"
+  },
+  {
+    "id": 92624,
+    "title": "Mulan",
+    "year": "1998",
+    "rating": "7.6",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Mulan&font=Montserrat",
+    "synopsis": "To save her father from death in the army, a young maiden secretly goes in his place and becomes one of China's greatest heroines in the process.",
+    "platform": "disney"
+  },
+  {
+    "id": 92625,
+    "title": "Pirates of the Caribbean: The Curse of the Black Pearl",
+    "year": "2003",
+    "rating": "8.1",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Pirates+of+the+Caribbean\\n+The+Curse+of+the+Black+Pearl&font=Montserrat",
+    "synopsis": "Blacksmith Will Turner teams up with eccentric pirate \"Captain\" Jack Sparrow to save his love, the governor's daughter, from Jack's former pirate allies, who are now undead.",
+    "platform": "disney"
+  },
+  {
+    "id": 92626,
+    "title": "Encanto",
+    "year": "2021",
+    "rating": "7.2",
+    "genres": [
+      "Animation",
+      "Family",
+      "Fantasy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Encanto&font=Montserrat",
+    "synopsis": "A Colombian teenage girl has to face the frustration of being the only member of her family without magical powers.",
+    "platform": "disney"
+  },
+  {
+    "id": 92627,
+    "title": "Big Hero 6",
+    "year": "2014",
+    "rating": "7.8",
+    "genres": [
+      "Animation",
+      "Family",
+      "Action"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Big+Hero+6&font=Montserrat",
+    "synopsis": "A special bond develops between plus-sized inflatable robot Baymax and prodigy Hiro Hamada, who together team up with a group of friends to form a band of high-tech heroes.",
+    "platform": "disney"
+  },
+  {
+    "id": 92628,
+    "title": "Wreck-It Ralph",
+    "year": "2012",
+    "rating": "7.7",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Wreck-It+Ralph&font=Montserrat",
+    "synopsis": "A video game villain wants to be a hero and sets out to fulfill his dream, but his quest brings havoc to the whole arcade where he lives.",
+    "platform": "disney"
+  },
+  {
+    "id": 92629,
+    "title": "Tangled",
+    "year": "2010",
+    "rating": "7.7",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Tangled&font=Montserrat",
+    "synopsis": "The magically long-haired Rapunzel has spent her entire life in a tower, but now that a runaway thief has stumbled upon her, she is about to discover the world for the first time, and who she really is.",
+    "platform": "disney"
+  },
+  {
+    "id": 92630,
+    "title": "Hercules",
+    "year": "1997",
+    "rating": "7.3",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Hercules&font=Montserrat",
+    "synopsis": "The son of Zeus and Hera is stripped of his immortality as an infant and must become a true hero in order to reclaim it.",
+    "platform": "disney"
+  },
+  {
+    "id": 92631,
+    "title": "Tarzan",
+    "year": "1999",
+    "rating": "7.3",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Tarzan&font=Montserrat",
+    "synopsis": "A man raised by gorillas must decide where he really belongs when he discovers he is a human.",
+    "platform": "disney"
+  },
+  {
+    "id": 92632,
+    "title": "Lilo & Stitch",
+    "year": "2002",
+    "rating": "7.3",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Lilo+&+Stitch&font=Montserrat",
+    "synopsis": "A Hawaiian girl adopts an unusual pet who is actually a notorious extra-terrestrial fugitive.",
+    "platform": "disney"
+  },
+  {
+    "id": 92633,
+    "title": "Cars",
+    "year": "2006",
+    "rating": "7.2",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Cars&font=Montserrat",
+    "synopsis": "A hot-shot race-car named Lightning McQueen gets waylaid in Radiator Springs, where he finds the true meaning of friendship and family.",
+    "platform": "disney"
+  },
+  {
+    "id": 92634,
+    "title": "Alice in Wonderland",
+    "year": "1951",
+    "rating": "7.4",
+    "genres": [
+      "Animation",
+      "Family",
+      "Fantasy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Alice+in+Wonderland&font=Montserrat",
+    "synopsis": "Alice stumbles into the world of Wonderland. Will she get home? Not if the Queen of Hearts has her way.",
+    "platform": "disney"
+  },
+  {
+    "id": 92635,
+    "title": "The Nightmare Before Christmas",
+    "year": "1993",
+    "rating": "7.9",
+    "genres": [
+      "Animation",
+      "Family",
+      "Fantasy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=The+Nightmare+Before+Christmas&font=Montserrat",
+    "synopsis": "Jack Skellington, king of Halloween Town, discovers Christmas Town, but his attempts to bring Christmas to his home causes confusion.",
+    "platform": "disney"
+  },
+  {
+    "id": 92636,
+    "title": "Soul",
+    "year": "2020",
+    "rating": "8.0",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Soul&font=Montserrat",
+    "synopsis": "After landing the gig of a lifetime, a New York jazz pianist suddenly finds himself trapped in a strange land between Earth and the afterlife.",
+    "platform": "disney"
+  },
+  {
+    "id": 92637,
+    "title": "Luca",
+    "year": "2021",
+    "rating": "7.4",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Luca&font=Montserrat",
+    "synopsis": "On the Italian Riviera, an unlikely but strong friendship grows between a human being and a sea monster disguised as a human.",
+    "platform": "disney"
+  },
+  {
+    "id": 92638,
+    "title": "Turning Red",
+    "year": "2022",
+    "rating": "7.0",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Turning+Red&font=Montserrat",
+    "synopsis": "A 13-year-old girl named Meilin turns into a giant red panda whenever she gets too excited.",
+    "platform": "disney"
+  },
+  {
+    "id": 92639,
+    "title": "Doctor Strange",
+    "year": "2016",
+    "rating": "7.5",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Fantasy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Doctor+Strange&font=Montserrat",
+    "synopsis": "While on a journey of physical and spiritual healing, a brilliant neurosurgeon is drawn into the world of the mystic arts.",
+    "platform": "disney"
+  },
+  {
+    "id": 92640,
+    "title": "Ant-Man",
+    "year": "2015",
+    "rating": "7.3",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Ant-Man&font=Montserrat",
+    "synopsis": "Armed with a super-suit with the astonishing ability to shrink in scale but increase in strength, cat burglar Scott Lang must embrace his inner hero and help his mentor, Dr. Hank Pym, pull off a heist that will save the world.",
+    "platform": "disney"
+  },
+  {
+    "id": 92641,
+    "title": "Captain America: Civil War",
+    "year": "2016",
+    "rating": "7.8",
+    "genres": [
+      "Action",
+      "Sci-Fi",
+      "Drama"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Captain+America\\n+Civil+War&font=Montserrat",
+    "synopsis": "Political involvement in the Avengers' affairs causes a rift between Captain America and Iron Man.",
+    "platform": "disney"
+  },
+  {
+    "id": 92642,
+    "title": "Star Wars: Episode I - The Phantom Menace",
+    "year": "1999",
+    "rating": "6.5",
+    "genres": [
+      "Sci-Fi",
+      "Action",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Star+Wars\\n+Episode+I+-+The+Phantom+Menace&font=Montserrat",
+    "synopsis": "Two Jedi escape a hostile blockade to find allies and come across a young boy who may bring balance to the Force.",
+    "platform": "disney"
+  },
+  {
+    "id": 92643,
+    "title": "Star Wars: Episode III - Revenge of the Sith",
+    "year": "2005",
+    "rating": "7.6",
+    "genres": [
+      "Sci-Fi",
+      "Action",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Star+Wars\\n+Episode+III+-+Revenge+of+the+Sith&font=Montserrat",
+    "synopsis": "Three years into the Clone Wars, the Jedi rescue Palpatine from Count Dooku. As Obi-Wan pursues a new threat, Anakin acts as a double agent between the Jedi Council and Palpatine.",
+    "platform": "disney"
+  },
+  {
+    "id": 92644,
+    "title": "Rogue One: A Star Wars Story",
+    "year": "2016",
+    "rating": "7.8",
+    "genres": [
+      "Sci-Fi",
+      "Action",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Rogue+One\\n+A+Star+Wars+Story&font=Montserrat",
+    "synopsis": "The daughter of an Imperial scientist joins the Rebel Alliance in a risky move to steal the plans for the Death Star.",
+    "platform": "disney"
+  },
+  {
+    "id": 92645,
+    "title": "Brave",
+    "year": "2012",
+    "rating": "7.1",
+    "genres": [
+      "Animation",
+      "Family",
+      "Adventure"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=Brave&font=Montserrat",
+    "synopsis": "Determined to make her own path in life, Princess Merida defies a custom that brings chaos to her kingdom.",
+    "platform": "disney"
+  },
+  {
+    "id": 92646,
+    "title": "A Bug's Life",
+    "year": "1998",
+    "rating": "7.2",
+    "genres": [
+      "Animation",
+      "Family",
+      "Comedy"
+    ],
+    "poster": "https://placehold.co/600x900/1f80e0/ffffff?text=A+Bug's+Life&font=Montserrat",
+    "synopsis": "A misfit ant, looking for \"warriors\" to save his colony from greedy grasshoppers, recruits a group of bugs that turn out to be an inept circus troupe.",
+    "platform": "disney"
   }
 ]

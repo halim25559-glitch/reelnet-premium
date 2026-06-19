@@ -61,7 +61,7 @@ async function addMovies() {
     moviesList.forEach(m => {
         // Create stylized placeholder URL
         const titleLines = m.title.replace(/:/g, '\\n').replace(/ /g, '+');
-        const posterUrl = \`https://placehold.co/600x900/1f80e0/ffffff?text=\${titleLines}&font=Montserrat\`;
+        const posterUrl = `https://placehold.co/600x900/1f80e0/ffffff?text=${titleLines}&font=Montserrat`;
         
         // Only add if not already present
         if (!movies.find(x => x.title === m.title)) {
@@ -80,7 +80,7 @@ async function addMovies() {
     });
     
     fs.writeFileSync('./public/movies.json', JSON.stringify(movies, null, 2));
-    console.log(\`Successfully added \${addedCount} top Disney+ movies!\`);
+    console.log(`Successfully added ${addedCount} top Disney+ movies!`);
 }
 
 addMovies();
