@@ -116,10 +116,53 @@ export default function ReelNetApp() {
         else if (aiStep === 2) {
             setAiStep(3); // Loading
             setTimeout(() => {
-                const candidates = movies.filter(m => parseFloat(m.rating) > 7.0 && m.poster);
-                setAiRecommendation(candidates[Math.floor(Math.random() * candidates.length)] || movies[0]);
+                const mood = aiAnswers.mood; // Previous answer
+                const era = val; // Current answer
+
+                let candidates = movies.filter(movie => {
+                    // Filter out fake posters to give a premium feel
+                    if (!movie.poster || movie.poster.includes("placehold.co")) return false;
+
+                    const genres = movie.genres ? movie.genres.map(g => g.toLowerCase()) : [];
+                    const year = parseInt(movie.year) || 2020;
+                    
+                    // Mood logic
+                    let moodMatch = false;
+                    if (mood === 'happy') {
+                        moodMatch = genres.includes('comedy') || genres.includes('family') || genres.includes('animation') || genres.includes('romance');
+                    } else if (mood === 'thrill') {
+                        moodMatch = genres.includes('action') || genres.includes('thriller') || genres.includes('horror') || genres.includes('sci-fi');
+                    } else if (mood === 'deep') {
+                        moodMatch = genres.includes('drama') || genres.includes('documentary') || genres.includes('biography');
+                    } else {
+                        moodMatch = true;
+                    }
+
+                    // Era logic
+                    let eraMatch = false;
+                    if (era === 'modern') eraMatch = year >= 2010;
+                    else if (era === 'classic') eraMatch = year < 2010;
+                    else eraMatch = true;
+
+                    return moodMatch && eraMatch;
+                });
+
+                // Fallback to top-rated movies if filters are too strict
+                if (candidates.length === 0) {
+                    candidates = movies.filter(m => parseFloat(m.rating) > 8.0 && m.poster && !m.poster.includes("placehold.co"));
+                }
+                if (candidates.length === 0) candidates = movies; // absolute fallback
+
+                // Sort by highest rating
+                candidates.sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
+
+                // Pick from the top 5 to ensure quality
+                const top5 = candidates.slice(0, 5);
+                const finalPick = top5[Math.floor(Math.random() * top5.length)];
+
+                setAiRecommendation(finalPick);
                 setAiStep(4); // Result
-            }, 2500);
+            }, 3000); // 3 seconds of "thinking"
         }
     };
 
