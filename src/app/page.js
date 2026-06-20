@@ -307,24 +307,30 @@ export default function ReelNetApp() {
             setLoading(false);
         });
 
-        // Load premium data from localStorage
-        const savedProfile = localStorage.getItem('reelnet_profile');
-        if (savedProfile) setActiveProfile(savedProfile);
-        
-        const savedReviews = localStorage.getItem('reelnet_reviews');
-        if (savedReviews) setReviews(JSON.parse(savedReviews));
+        // Load premium data from localStorage safely
+        try {
+            const savedProfile = localStorage.getItem('reelnet_profile');
+            if (savedProfile) setActiveProfile(savedProfile);
+            
+            const savedReviews = localStorage.getItem('reelnet_reviews');
+            if (savedReviews) setReviews(JSON.parse(savedReviews));
 
-        fetchGlobalVotes();
-        
-        const wl = localStorage.getItem('reelnet_watchlist');
-        if (wl) setWatchlist(JSON.parse(wl));
-        const authData = localStorage.getItem('reelnet_auth');
-        if (authData) setAuth(JSON.parse(authData));
-        const t = localStorage.getItem('reelnet_theme');
-        if (t) setTheme(t);
-        else {
-            const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(sysDark ? 'dark' : 'light');
+            fetchGlobalVotes();
+
+            const wl = localStorage.getItem('reelnet_watchlist');
+            if (wl) setWatchlist(JSON.parse(wl));
+            
+            const authData = localStorage.getItem('reelnet_auth');
+            if (authData) setAuth(JSON.parse(authData));
+            
+            const t = localStorage.getItem('reelnet_theme');
+            if (t) setTheme(t);
+            else {
+                const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(sysDark ? 'dark' : 'light');
+            }
+        } catch (e) {
+            console.error("Storage error:", e);
         }
         
         if ('serviceWorker' in navigator) {
@@ -561,7 +567,7 @@ export default function ReelNetApp() {
             {!activeProfile && !loading && (
                 <div className="profile-gate">
                     <div className="profile-gate-content">
-                        <h1>Who's watching?</h1>
+                        <h1>Who&apos;s watching?</h1>
                         <div className="profiles-container">
                             {['Dad', 'Mom', 'Kids', 'Guest'].map((name, i) => (
                                 <div key={name} className="profile-card" onClick={(e) => {
