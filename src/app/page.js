@@ -44,6 +44,14 @@ export default function ReelNetApp() {
     const [authForm, setAuthForm] = useState({ email: '', password: '', username: '' });
     const [theme, setTheme] = useState('dark');
     
+    // Premium Features
+    const [activeProfile, setActiveProfile] = useState(null);
+    const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+    const [reviews, setReviews] = useState({});
+    const [reviewInput, setReviewInput] = useState("");
+    const [reviewRating, setReviewRating] = useState(5);
+    const [scrolled, setScrolled] = useState(false);
+    
     const [loading, setLoading] = useState(true);
     const [toast, setToast] = useState({ msg: '', icon: '', show: false });
 
@@ -286,37 +294,42 @@ export default function ReelNetApp() {
 
     // Initial Load
     useEffect(() => {
-        const localTheme = localStorage.getItem('reelnet_theme');
-        if (localTheme) setTheme(localTheme);
+        // Load initial data
+        fetch('/movies.json').then(r => r.json()).then(data => {
+            const sorted = data.sort((a, b) => parseFloat(b.rating || 0) - parseFloat(a.rating || 0));
+            setMovies(sorted);
+            const highRated = sorted.filter(m => parseFloat(m.rating || 0) >= 8.0 && m.poster && !m.poster.includes('placehold.co'));
+            if (highRated.length > 0) setHeroMovie(highRated[Math.floor(Math.random() * highRated.length)]);
+            else setHeroMovie(sorted[0]);
+            setLoading(false);
+        }).catch(err => {
+            console.error("Failed to load movies:", err);
+            setLoading(false);
+        });
+
+        // Load premium data from localStorage
+        const savedProfile = localStorage.getItem('reelnet_profile');
+        if (savedProfile) setActiveProfile(savedProfile);
         
-        const localWatchlist = JSON.parse(localStorage.getItem('reelnet_watchlist') || '[]');
-        if (localWatchlist.length > 0) setWatchlist(localWatchlist);
+        const savedReviews = localStorage.getItem('reelnet_reviews');
+        if (savedReviews) setReviews(JSON.parse(savedReviews));
+
+        fetchGlobalVotes();
         
-        const localAuth = JSON.parse(localStorage.getItem('reelnet_auth') || 'null');
-        if (localAuth) setAuth(localAuth);
+        const wl = localStorage.getItem('reelnet_watchlist');
+        if (wl) setWatchlist(JSON.parse(wl));
+        const authData = localStorage.getItem('reelnet_auth');
+        if (authData) setAuth(JSON.parse(authData));
+        const t = localStorage.getItem('reelnet_theme');
+        if (t) setTheme(t);
+        else {
+            const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(sysDark ? 'dark' : 'light');
+        }
         
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').catch(err => console.log(err));
         }
-
-        Promise.all([
-            fetch('/movies.json').then(r => r.json()),
-            fetch('/api/votes').then(r => r.json())
-        ]).then(([m, v]) => {
-            setMovies(m);
-            setGlobalVotes(v);
-            const candidates = m.filter(x => x.poster && parseFloat(x.rating) >= 8.0);
-            if(candidates.length > 0) setHeroMovie(candidates[Math.floor(Math.random() * candidates.length)]);
-            setLoading(false);
-            showToast(`${m.length} titles loaded`, 'fa-film');
-            
-            // Check Hash
-            const match = window.location.hash.match(/#\/movie\/(.+)/);
-            if(match && match[1]) {
-                const initMovie = m.find(x => x.id === match[1]);
-                if(initMovie) handleOpenMovie(initMovie, true);
-            }
-        });
         
         const handleHash = () => {
             const match = window.location.hash.match(/#\/movie\/(.+)/);
@@ -389,6 +402,7 @@ export default function ReelNetApp() {
     // Parallax Effect
     useEffect(() => {
         const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
             const heroBg = document.querySelector('.hero-bg');
             if(heroBg) heroBg.style.backgroundPositionY = `${window.scrollY * 0.4}px`;
         };
@@ -536,9 +550,39 @@ export default function ReelNetApp() {
 
     return (
         <>
-            <div id="toast" className={`toast ${toast.show ? 'show' : ''}`}><i className={`fa-solid ${toast.icon}`} style={{marginRight:'8px'}}></i>{toast.msg}</div>
+            {/* Global UI Elements */}
+            {toast.show && (
+                <div className="toast">
+                    <i className={`fa-solid ${toast.icon}`}></i> {toast.msg}
+                </div>
+            )}
 
-            <nav className="topbar">
+            {/* Profile Selection Intercept */}
+            {!activeProfile && !loading && (
+                <div className="profile-gate">
+                    <div className="profile-gate-content">
+                        <h1>Who's watching?</h1>
+                        <div className="profiles-container">
+                            {['Dad', 'Mom', 'Kids', 'Guest'].map((name, i) => (
+                                <div key={name} className="profile-card" onClick={(e) => {
+                                    createRipple(e);
+                                    setActiveProfile(name);
+                                    localStorage.setItem('reelnet_profile', name);
+                                }}>
+                                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}&backgroundColor=b6e3f4`} alt={name} />
+                                    <span>{name}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <button className="manage-profiles-btn">Manage Profiles</button>
+                    </div>
+                </div>
+            )}
+
+            {/* Main Application (Only renders if profile is selected) */}
+            {activeProfile && (
+                <>
+            <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
                 <div className="logo" onClick={() => { setCurrentCategory("🏆 Top Ranked"); setSearchQuery(""); }}>
                     <div style={{width: '38px', height: '38px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(229,9,20,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                         <img src="/logo.png" alt="ReelNet Logo" style={{width: '125%', height: '125%', objectFit: 'cover'}} />
@@ -682,7 +726,7 @@ export default function ReelNetApp() {
                                         <span className="hero-rating"><i className="fa-solid fa-star"></i> {heroMovie.rating}</span>
                                     </div>
                                     <div className="hero-actions">
-                                        <button className="play-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(`${heroPlatform.searchUrl}${encodeURIComponent(heroMovie.title)}`, "_blank")}}><i className="fa-solid fa-play"></i> Watch on {heroPlatform.name}</button>
+                                        <button className="play-btn ripple-btn" onClick={(e)=>{createRipple(e); setIsPlayingVideo(true);}}><i className="fa-solid fa-play"></i> Watch on {heroPlatform.name}</button>
                                         <button className="vote-btn ripple-btn" onClick={(e)=>submitVote(heroMovie.id, e)}><i className="fa-solid fa-heart"></i> Vote</button>
                                         <button className={`watchlist-btn ripple-btn ${watchlist.includes(heroMovie.id)?'added':''}`} onClick={(e)=>{createRipple(e); toggleWatchlist(heroMovie.id)}}><i className="fa-solid fa-plus"></i> Watchlist</button>
                                     </div>
@@ -725,6 +769,25 @@ export default function ReelNetApp() {
                             </select>
                         </div>
                     </div>
+
+                        {/* Top 10 Row */}
+                        {searchQuery === "" && currentCategory === "🏆 Top Ranked" && top10Movies.length > 0 && (
+                            <div className="top-10-section">
+                                <h2 className="section-title" style={{marginLeft: '20px', marginBottom: '10px', fontSize: '1.5rem', fontWeight: 800}}>Top 10 in Thailand Today</h2>
+                                <div className="top-10-slider" style={{display: 'flex', overflowX: 'auto', gap: '40px', padding: '20px', scrollBehavior: 'smooth'}}>
+                                    {top10Movies.map((m, idx) => (
+                                        <div key={m.id} className="top-10-card" style={{display: 'flex', alignItems: 'center', minWidth: '250px', position: 'relative', cursor: 'pointer', transition: 'transform 0.2s'}} onClick={() => handleOpenMovie(m)}>
+                                            <div className="top-10-number" style={{position: 'absolute', left: '-20px', bottom: '-20px', zIndex: 1}}>
+                                                <svg width="120" height="150" viewBox="0 0 100 150">
+                                                    <text x="50" y="140" textAnchor="middle" fontWeight="900" fontSize="180" stroke="#a855f7" strokeWidth="4" fill="#141414">{idx + 1}</text>
+                                                </svg>
+                                            </div>
+                                            <img src={m.poster} alt={`Top ${idx + 1}`} style={{width: '140px', height: '210px', objectFit: 'cover', borderRadius: '8px', zIndex: 2, marginLeft: '50px', boxShadow: '0 8px 20px rgba(0,0,0,0.5)'}} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                     {loading ? (
                         <div className="movie-grid">
@@ -799,7 +862,7 @@ export default function ReelNetApp() {
                                 </div>
 
                                 <div className="modal-actions">
-                                        <button className="primary-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(`${getPlatformDetails(currentMovie.platform).searchUrl}${encodeURIComponent(currentMovie.title)}`, "_blank")}}>
+                                        <button className="primary-btn ripple-btn" onClick={(e)=>{createRipple(e); setIsPlayingVideo(true);}}>
                                             <i className="fa-solid fa-play"></i> Watch on {getPlatformDetails(currentMovie.platform).name}
                                         </button>
                                     <button className={`vote-btn ripple-btn ${globalVotes[currentMovie.id]?'voted':''}`} onClick={(e)=>submitVote(currentMovie.id, e)}><i className="fa-solid fa-heart"></i> <span>{globalVotes[currentMovie.id]||0}</span></button>
@@ -830,28 +893,83 @@ export default function ReelNetApp() {
                                     </div>
                                 </div>
 
-                                <div className="comments-section">
-                                    <h4><i className="fa-solid fa-comments"></i> Reviews <span>({comments.length})</span></h4>
-                                    <div className="comment-form">
-                                        <div className="comment-input-row">
-                                            <img src={auth ? auth.avatar : 'https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'} className="mini-avatar" alt="Avatar"/>
-                                            <input type="text" id="comment-text" placeholder={`Write a review as ${auth ? auth.username : 'Guest'}...`} maxLength="500" onKeyDown={e => {if(e.key==='Enter') submitComment()}} />
-                                            <button className="comment-submit ripple-btn" id="comment-submit" onClick={(e)=>{createRipple(e); submitComment()}}><i className="fa-solid fa-paper-plane"></i></button>
+                                <div className="comments-section" style={{marginTop: '30px'}}>
+                                    <h4 style={{fontSize: '1.2rem', marginBottom: '15px'}}><i className="fa-solid fa-star-half-stroke"></i> Community Reviews</h4>
+                                    
+                                    {/* Review Input */}
+                                    <div className="review-input-box" style={{background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '20px'}}>
+                                        <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px'}}>
+                                            <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${activeProfile}&backgroundColor=b6e3f4`} alt="Avatar" style={{width: '36px', height: '36px', borderRadius: '50%'}} />
+                                            <span style={{fontWeight: 'bold'}}>{activeProfile}</span>
+                                            
+                                            {/* Star Rating Selector */}
+                                            <div className="star-rating-selector" style={{marginLeft: 'auto', display: 'flex', gap: '5px', cursor: 'pointer'}}>
+                                                {[1,2,3,4,5].map(star => (
+                                                    <i 
+                                                        key={star} 
+                                                        className={`fa-solid fa-star`} 
+                                                        style={{color: star <= reviewRating ? 'var(--gold)' : '#444'}}
+                                                        onClick={() => setReviewRating(star)}
+                                                    ></i>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div style={{display: 'flex', gap: '10px'}}>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Write your review here..." 
+                                                value={reviewInput}
+                                                onChange={e => setReviewInput(e.target.value)}
+                                                style={{flex: 1, padding: '10px 15px', borderRadius: '20px', background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border)', color: '#fff', outline: 'none'}}
+                                                onKeyDown={e => {
+                                                    if(e.key === 'Enter' && reviewInput.trim()) {
+                                                        const newReview = { id: Date.now(), user: activeProfile, text: reviewInput.trim(), rating: reviewRating, date: new Date().toLocaleDateString() };
+                                                        const updatedReviews = { ...reviews, [currentMovie.id]: [newReview, ...(reviews[currentMovie.id] || [])] };
+                                                        setReviews(updatedReviews);
+                                                        localStorage.setItem('reelnet_reviews', JSON.stringify(updatedReviews));
+                                                        setReviewInput("");
+                                                        showToast("Review Posted!", "fa-check");
+                                                    }
+                                                }}
+                                            />
+                                            <button 
+                                                className="primary-btn ripple-btn" 
+                                                style={{padding: '0 20px', borderRadius: '20px'}}
+                                                onClick={(e) => {
+                                                    if(reviewInput.trim()){
+                                                        createRipple(e);
+                                                        const newReview = { id: Date.now(), user: activeProfile, text: reviewInput.trim(), rating: reviewRating, date: new Date().toLocaleDateString() };
+                                                        const updatedReviews = { ...reviews, [currentMovie.id]: [newReview, ...(reviews[currentMovie.id] || [])] };
+                                                        setReviews(updatedReviews);
+                                                        localStorage.setItem('reelnet_reviews', JSON.stringify(updatedReviews));
+                                                        setReviewInput("");
+                                                        showToast("Review Posted!", "fa-check");
+                                                    }
+                                                }}
+                                            ><i className="fa-solid fa-paper-plane"></i></button>
                                         </div>
                                     </div>
-                                    <div className="comments-list">
-                                        {comments.map(c => (
-                                            <div key={c.id} className="comment-item">
-                                                <img src={c.avatar || "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png"} alt="Commenter Avatar"/>
-                                                <div className="comment-content">
-                                                    <div className="comment-header">
-                                                        <span className="comment-user">{c.username}</span>
-                                                        <span className="comment-time">{new Date(c.timestamp).toLocaleDateString()}</span>
+
+                                    {/* Reviews List */}
+                                    <div className="reviews-list" style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
+                                        {(reviews[currentMovie.id] || []).map(rev => (
+                                            <div key={rev.id} className="review-item" style={{display: 'flex', gap: '15px', background: 'rgba(0,0,0,0.3)', padding: '15px', borderRadius: '8px'}}>
+                                                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${rev.user}&backgroundColor=b6e3f4`} alt="Avatar" style={{width: '40px', height: '40px', borderRadius: '50%'}} />
+                                                <div style={{flex: 1}}>
+                                                    <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '5px'}}>
+                                                        <strong style={{color: '#fff'}}>{rev.user}</strong>
+                                                        <span style={{fontSize: '0.8rem', color: 'gray'}}>{rev.date}</span>
                                                     </div>
-                                                    <div className="comment-text">{c.text}</div>
+                                                    <div style={{color: 'var(--gold)', fontSize: '0.85rem', marginBottom: '8px'}}>
+                                                        {[...Array(rev.rating)].map((_,i) => <i key={i} className="fa-solid fa-star"></i>)}
+                                                    </div>
+                                                    <p style={{margin: 0, fontSize: '0.95rem', color: '#ddd', lineHeight: 1.5}}>{rev.text}</p>
                                                 </div>
                                             </div>
                                         ))}
+                                        {(!reviews[currentMovie.id] || reviews[currentMovie.id].length === 0) && (
+                                            <p style={{textAlign: 'center', color: 'gray', fontStyle: 'italic', padding: '20px 0'}}>No reviews yet. Be the first to review!</p>
+                                        )}
                                     </div>
                                 </div>
                         </div>
@@ -1037,6 +1155,34 @@ export default function ReelNetApp() {
                         </form>
                     </div>
                 </div>
+            )}
+
+            {/* Cinematic Video Player Overlay */}
+            {isPlayingVideo && (
+                <div className="video-player-overlay" style={{position: 'fixed', inset: 0, zIndex: 99999, background: '#000', display: 'flex', flexDirection: 'column'}}>
+                    <video 
+                        src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" 
+                        autoPlay 
+                        controls 
+                        style={{width: '100%', height: '100%', objectFit: 'contain'}}
+                        onEnded={() => setIsPlayingVideo(false)}
+                    ></video>
+                    <button 
+                        onClick={() => setIsPlayingVideo(false)}
+                        style={{position: 'absolute', top: '20px', right: '30px', background: 'rgba(0,0,0,0.5)', color: '#fff', border: 'none', width: '50px', height: '50px', borderRadius: '50%', fontSize: '1.5rem', cursor: 'pointer', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}
+                    >
+                        <i className="fa-solid fa-xmark"></i>
+                    </button>
+                    <button
+                        onClick={() => showToast("Intro Skipped!", "fa-forward")}
+                        style={{position: 'absolute', bottom: '100px', right: '40px', background: 'rgba(255,255,255,0.8)', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '4px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer', zIndex: 100000, boxShadow: '0 4px 10px rgba(0,0,0,0.5)'}}
+                    >
+                        Skip Intro <i className="fa-solid fa-forward-step"></i>
+                    </button>
+                </div>
+            )}
+
+            </>
             )}
         </>
     );

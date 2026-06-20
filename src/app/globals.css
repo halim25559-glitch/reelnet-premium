@@ -497,6 +497,19 @@ body.light-mode .hero-overlay { background: linear-gradient(to right, rgba(245,2
 .chat-movie-info h4 { margin: 0; font-size: 0.95rem; font-weight: 700; color: #fff; }
 .chat-movie-info span { font-size: 0.8rem; color: var(--gold); }
 
+/* === PROFILE GATE === */
+.profile-gate { position: fixed; inset: 0; background: #141414; z-index: 9999; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.5s ease forwards; }
+.profile-gate-content { text-align: center; }
+.profile-gate h1 { font-size: 3rem; color: #fff; margin-bottom: 2rem; font-weight: 600; }
+.profiles-container { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+.profile-card { display: flex; flex-direction: column; align-items: center; gap: 1rem; cursor: pointer; transition: transform 0.2s; opacity: 0.6; }
+.profile-card:hover { opacity: 1; transform: scale(1.05); }
+.profile-card img { width: 12vw; min-width: 80px; max-width: 150px; height: 12vw; min-height: 80px; max-height: 150px; border-radius: 4px; border: 2px solid transparent; transition: border-color 0.2s; }
+.profile-card:hover img { border-color: #fff; }
+.profile-card span { color: #fff; font-size: 1.2rem; }
+.manage-profiles-btn { background: transparent; border: 1px solid grey; color: grey; padding: 0.5rem 1.5rem; font-size: 1.2rem; cursor: pointer; transition: all 0.2s; letter-spacing: 2px; }
+.manage-profiles-btn:hover { color: #fff; border-color: #fff; }
+
 /* === SERVICES GRID === */
 .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
 @media (min-width: 768px) { .services-grid { grid-template-columns: repeat(3, 1fr); } }
