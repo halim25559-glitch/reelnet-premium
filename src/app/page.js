@@ -46,7 +46,6 @@ export default function ReelNetApp() {
     
     // Premium Features
     const [activeProfile, setActiveProfile] = useState(null);
-    const [isPlayingVideo, setIsPlayingVideo] = useState(false);
     const [reviews, setReviews] = useState({});
     const [reviewInput, setReviewInput] = useState("");
     const [reviewRating, setReviewRating] = useState(5);
@@ -752,7 +751,7 @@ export default function ReelNetApp() {
                                         <span className="hero-rating"><i className="fa-solid fa-star"></i> {heroMovie.rating}</span>
                                     </div>
                                     <div className="hero-actions">
-                                        <button className="play-btn ripple-btn" onClick={(e)=>{createRipple(e); setIsPlayingVideo(true);}}><i className="fa-solid fa-play"></i> Watch on {heroPlatform.name}</button>
+                                        <button className="play-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(heroPlatform.searchUrl + encodeURIComponent(heroMovie.title), "_blank");}}><i className="fa-solid fa-play"></i> Watch on {heroPlatform.name}</button>
                                         <button className="vote-btn ripple-btn" onClick={(e)=>submitVote(heroMovie.id, e)}><i className="fa-solid fa-heart"></i> Vote</button>
                                         <button className={`watchlist-btn ripple-btn ${watchlist.includes(heroMovie.id)?'added':''}`} onClick={(e)=>{createRipple(e); toggleWatchlist(heroMovie.id)}}><i className="fa-solid fa-plus"></i> Watchlist</button>
                                     </div>
@@ -888,7 +887,7 @@ export default function ReelNetApp() {
                                 </div>
 
                                 <div className="modal-actions">
-                                        <button className="primary-btn ripple-btn" onClick={(e)=>{createRipple(e); setIsPlayingVideo(true);}}>
+                                        <button className="primary-btn ripple-btn" onClick={(e)=>{createRipple(e); window.open(getPlatformDetails(currentMovie.platform).searchUrl + encodeURIComponent(currentMovie.title), "_blank");}}>
                                             <i className="fa-solid fa-play"></i> Watch on {getPlatformDetails(currentMovie.platform).name}
                                         </button>
                                     <button className={`vote-btn ripple-btn ${globalVotes[currentMovie.id]?'voted':''}`} onClick={(e)=>submitVote(currentMovie.id, e)}><i className="fa-solid fa-heart"></i> <span>{globalVotes[currentMovie.id]||0}</span></button>
@@ -1180,31 +1179,6 @@ export default function ReelNetApp() {
                             <button type="submit" disabled={!chatInput.trim() || isBotTyping}><i className="fa-solid fa-paper-plane"></i></button>
                         </form>
                     </div>
-                </div>
-            )}
-
-            {/* Cinematic Video Player Overlay */}
-            {isPlayingVideo && (
-                <div className="video-player-overlay" style={{position: 'fixed', inset: 0, zIndex: 99999, background: '#000', display: 'flex', flexDirection: 'column'}}>
-                    <video 
-                        src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" 
-                        autoPlay 
-                        controls 
-                        style={{width: '100%', height: '100%', objectFit: 'contain'}}
-                        onEnded={() => setIsPlayingVideo(false)}
-                    ></video>
-                    <button 
-                        onClick={() => setIsPlayingVideo(false)}
-                        style={{position: 'absolute', top: '20px', right: '30px', background: 'rgba(0,0,0,0.5)', color: '#fff', border: 'none', width: '50px', height: '50px', borderRadius: '50%', fontSize: '1.5rem', cursor: 'pointer', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-                    >
-                        <i className="fa-solid fa-xmark"></i>
-                    </button>
-                    <button
-                        onClick={() => showToast("Intro Skipped!", "fa-forward")}
-                        style={{position: 'absolute', bottom: '100px', right: '40px', background: 'rgba(255,255,255,0.8)', color: '#000', border: 'none', padding: '10px 20px', borderRadius: '4px', fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer', zIndex: 100000, boxShadow: '0 4px 10px rgba(0,0,0,0.5)'}}
-                    >
-                        Skip Intro <i className="fa-solid fa-forward-step"></i>
-                    </button>
                 </div>
             )}
 
