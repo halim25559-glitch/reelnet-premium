@@ -396,6 +396,16 @@ export default function ReelNetApp() {
         return arr;
     }, [movies, searchQuery, currentCategory, sortMode, filters, watchlist, globalVotes]);
 
+    const top10Movies = useMemo(() => {
+        return [...movies]
+            .sort((a, b) => {
+                const va = globalVotes[a.id] || 0, vb = globalVotes[b.id] || 0;
+                if (va !== vb) return vb - va;
+                return (parseFloat(b.rating) || 0) - (parseFloat(a.rating) || 0);
+            })
+            .slice(0, 10);
+    }, [movies, globalVotes]);
+
     const similarMovies = useMemo(() => {
         if(!currentMovie || !currentMovie.genres) return [];
         return movies.map(m => {
@@ -467,6 +477,16 @@ export default function ReelNetApp() {
             "other": { name: "Stream", icon: "▶", colorClass: "badge-other", searchUrl: "https://www.google.com/search?q=", themeColor: "#ff9900", themeColorHover: "#cc7a00", themeColorGlow: "rgba(255,153,0,0.4)" }
         };
         return platforms[platformStr || "netflix"] || platforms["netflix"];
+    };
+
+    const fetchGlobalVotes = async () => {
+        try {
+            const res = await fetch('/api/votes');
+            const data = await res.json();
+            setGlobalVotes(data || {});
+        } catch (e) {
+            console.error("Failed to fetch votes:", e);
+        }
     };
 
     const submitVote = async (id, e) => {
