@@ -4,6 +4,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const metadata = {
+  metadataBase: new URL('https://reelnet-premium.vercel.app'),
   title: 'ReelNet — Premium Streaming Guide',
   description: 'Discover, vote, and rank the best Netflix shows and movies. Your ultimate guide to what to watch next.',
   openGraph: {
@@ -28,8 +29,13 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <script dangerouslySetInnerHTML={{__html: `
-          document.addEventListener('contextmenu', event => event.preventDefault());
+          // Leave text fields alone so users can select, copy and paste what they type
+          const isEditable = el => el && (el.closest('input, textarea, [contenteditable="true"]'));
+          document.addEventListener('contextmenu', event => {
+            if (!isEditable(event.target)) event.preventDefault();
+          });
           document.addEventListener('keydown', event => {
+            if (isEditable(event.target)) return;
             if ((event.ctrlKey || event.metaKey) && ['c', 'a', 's', 'x'].includes(event.key.toLowerCase())) {
               event.preventDefault();
             }

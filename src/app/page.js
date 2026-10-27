@@ -314,7 +314,8 @@ export default function ReelNetApp() {
             const savedReviews = localStorage.getItem('reelnet_reviews');
             if (savedReviews) setReviews(JSON.parse(savedReviews));
 
-            fetchGlobalVotes();
+            fetch('/api/votes').then(r => r.json()).then(data => setGlobalVotes(data || {}))
+                .catch(err => console.error("Failed to fetch votes:", err));
 
             const wl = localStorage.getItem('reelnet_watchlist');
             if (wl) setWatchlist(JSON.parse(wl));
@@ -439,8 +440,7 @@ export default function ReelNetApp() {
 
     // Reset Rendered Count on filter change
     useEffect(() => {
-        // eslint-disable-next-line
-        setRenderedCount(batchSize); 
+        setRenderedCount(batchSize);
     }, [searchQuery, currentCategory, sortMode, filters]);
 
     // Handlers
@@ -476,16 +476,6 @@ export default function ReelNetApp() {
             "other": { name: "Stream", icon: "▶", colorClass: "badge-other", searchUrl: "https://www.google.com/search?q=", themeColor: "#ff9900", themeColorHover: "#cc7a00", themeColorGlow: "rgba(255,153,0,0.4)" }
         };
         return platforms[platformStr || "netflix"] || platforms["netflix"];
-    };
-
-    const fetchGlobalVotes = async () => {
-        try {
-            const res = await fetch('/api/votes');
-            const data = await res.json();
-            setGlobalVotes(data || {});
-        } catch (e) {
-            console.error("Failed to fetch votes:", e);
-        }
     };
 
     const submitVote = async (id, e) => {
